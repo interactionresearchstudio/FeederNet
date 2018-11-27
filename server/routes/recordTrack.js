@@ -42,7 +42,7 @@ function addWaypoint(req, res, next) {
 		res.locals.timestamp = req.body.datetime;
 	}
     var newWaypoint = new Waypoint({
-        datetime: timestamp
+        datetime: res.locals.timestamp
     });
     newWaypoint.save((err, waypoint) => {
         if (err) {
