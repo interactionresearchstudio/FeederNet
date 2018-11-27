@@ -35,8 +35,14 @@ function getBirdAndFeederId(req, res, next) {
 
 // Add new waypoint
 function addWaypoint(req, res, next) {
+	res.locals.timestamp = "";
+	if (req.body.datetime == "" || req.body.datetime == " ") {
+		res.locals.timestamp = String(Math.floor(new Date() / 1000));
+	} else {
+		res.locals.timestamp = req.body.datetime;
+	}
     var newWaypoint = new Waypoint({
-        datetime: req.body.datetime
+        datetime: timestamp
     });
     newWaypoint.save((err, waypoint) => {
         if (err) {
@@ -60,7 +66,7 @@ function addEvent(req, res) {
     var newEvent = new Event({
         type: 'recordTrack',
         ip: ipAddress,
-        datetime: req.body.datetime
+        datetime: res.locals.timestamp
     });
     newEvent.save((err) => {
         if (err) {
