@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel, Button, Row, Col } from 'react-bootstrap';
-import axios from 'axios';
 
 class BirdForm extends Component {
   constructor(props, context) {
@@ -27,22 +26,18 @@ class BirdForm extends Component {
   // Handle submit
   handleSubmit(e) {
     e.preventDefault();
-    const postData = {
-      name: this.state.birdName,
-      rfid: this.state.birdRfid
-    }
-    axios.post('/api/birds', postData)
-      .then(res => {
-        console.log(res.data);
-        this.setState({
-          birdName: '',
-          birdRfid: ''
-        })
-        // Also remember to reload data.
-      })
-      .catch((error) => {
-        console.log(error);
+
+    this.props.addBird(this.state.birdName, this.state.birdRfid, (error) => {
+      if (error) {
+        console.log("ERROR: Could not add bird.");
+        return;
+      }
+
+      this.setState({
+        birdName: '',
+        birdRfid: ''
       });
+    });
   }
 
   render() {
