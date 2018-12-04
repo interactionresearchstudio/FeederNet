@@ -6,31 +6,54 @@ var Feeder = require('../models/feeder');
 var Event = require('../models/event');
 
 // API routes
-router.post('/recordTrack', getBirdAndFeederId, addWaypoint, addEvent);
+router.post('/recordTrack', getBirdId, getFeederId, addWaypoint, addEvent);
 
-// Get bird ID from RFID and feeder ID from stub
-function getBirdAndFeederId(req, res, next) {
-    Bird.findOne({rfid: req.body.rfid})
-    .exec((err, bird) => {
+// Get bird ID from RFID.
+function getBirdId(req, res, next) {
+  Bird.findOne({rfid: req.body.rfid})
+  .exec((err, bird) => {
+    if (err) {
+      console.log("ERROR: Could not search.");
+      res.json({'ERROR': err});
+    } else if (!bird) {
+      console.log("INFO: Bird not found. Creating new one.");
+      var newBird = new Bird({
+        rfid: req.body.rfid,
+        name: 'Unknown Bird'
+      });
+      newBird.save((err, data) => {
         if (err) {
-            res.json({'ERROR': err});
-        } else if (!bird) {
-            res.send(400);
+          res.json({'ERROR': err});
+          console.log("ERROR: Could not save new bird.");
         } else {
-            Feeder.findOne({stub: req.body.stub})
-            .exec((err, feeder) => {
-                if (err) {
-                    res.json({'ERROR': err});
-                } else if (!feeder) {
-                    res.send(400);
-                } else {
-                    res.locals.bird_id = bird._id;
-                    res.locals.feeder_id = feeder._id;
-                    next();
-                }
-            });
+          console.log("INFO: Created new bird with ID " + String(data.id));
+          res.locals.bird_id = data.id;
+          next();
         }
-    });
+      });
+    } else {
+      console.log("INFO: Found bird in DB.");
+      res.locals.bird_id = bird._id;
+      next();
+    }
+  });
+}
+
+// Get Feeder ID from stub
+function getFeederId(req, res, next) {
+  Feeder.findOne({stub: req.body.stub})
+  .exec((err, feeder) => {
+    if (err) {
+      res.json({'ERROR': err});
+    } else if (!feeder) {
+      console.log("ERROR: Feeder stub not found.");
+      res.send(400);
+    } else {
+      console.log("INFO: Found feeder in DB.");
+      res.locals.feeder_id = feeder._id;
+      next();
+    }
+  });
 }
 
 // Add new waypoint
