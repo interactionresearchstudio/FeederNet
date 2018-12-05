@@ -12,7 +12,7 @@ class FeederTable extends Component {
           <td>{object.stub}</td>
           <td>{object.location.latitude}</td>
           <td>{object.location.longitude}</td>
-          <td>{object.lastPing}</td>
+          <td>{this.convertTime(object.lastPing)}</td>
           <td>
             <Button
               onClick={() => this.props.deleteFeeder(object._id)}
@@ -26,6 +26,18 @@ class FeederTable extends Component {
     });
   }
 
+  convertTime(UNIX_timestamp) {
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+    return time;
+  }
 
   render() {
     return(
