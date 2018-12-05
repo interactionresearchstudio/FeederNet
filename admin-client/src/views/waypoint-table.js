@@ -2,28 +2,28 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Table, Button, Glyphicon } from 'react-bootstrap';
 
-class EventTable extends Component {
+class WaypointTable extends Component {
   constructor(props) {
     super(props);
 
     this.deleteItem = this.deleteItem.bind(this);
-    this.getEvents = this.getEvents.bind(this);
+    this.getWaypoints = this.getWaypoints.bind(this);
 
     this.state = {
-      events: []
+      waypoints: []
     };
   }
 
   componentDidMount() {
-    this.getEvents();
+    this.getWaypoints();
   }
 
   // GET birds
-  getEvents() {
-    axios.get('/api/events')
+  getWaypoints() {
+    axios.get('/api/waypoints')
       .then(response => {
         this.setState({
-          events: response.data
+          waypoints: response.data
         });
       })
       .catch((error) => {
@@ -33,11 +33,12 @@ class EventTable extends Component {
 
   // Build table rows
   buildRows() {
-    return this.state.events.map((object, i) => {
+    return this.state.waypoints.map((object, i) => {
       return(
         <tr key={i}>
-          <td>{object.type}</td>
-          <td>{object.ip}</td>
+          <td>{object.bird.name}</td>
+          <td>{object.bird.rfid}</td>
+          <td>{object.feeder.stub}</td>
           <td>{this.convertTime(object.datetime)}</td>
           <td>
             <Button
@@ -54,9 +55,9 @@ class EventTable extends Component {
 
   deleteItem(itemId) {
     console.log("Delete item with ID " + itemId);
-    axios.delete('/api/event/' + itemId)
+    axios.delete('/api/waypoint/' + itemId)
       .then(res => {
-        this.getEvents();
+        this.getWaypoints();
       })
       .catch((error) => {
         console.log(error);
@@ -81,7 +82,7 @@ class EventTable extends Component {
       <div>
         <br/>
         <Button
-          onClick={() => this.getEvents()}
+          onClick={() => this.getWaypoints()}
           bsSize="small"
           >
           <Glyphicon glyph="refresh"/>
@@ -90,8 +91,9 @@ class EventTable extends Component {
         <Table striped bordered condensed hover>
           <thead>
             <tr>
-              <th>Event Type</th>
-              <th>IP Address</th>
+              <th>Bird Name</th>
+              <th>RFID</th>
+              <th>Feeder Stub</th>
               <th>Date and Time</th>
               <th>Actions</th>
             </tr>
@@ -105,4 +107,4 @@ class EventTable extends Component {
   }
 }
 
-export default EventTable;
+export default WaypointTable;
