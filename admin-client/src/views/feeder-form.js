@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel, Button, Row, Col } from 'react-bootstrap';
-import axios from 'axios';
 
 class FeederForm extends Component {
   constructor(props, context) {
@@ -40,28 +39,23 @@ class FeederForm extends Component {
   // Handle submit
   handleSubmit(e) {
     e.preventDefault();
-    const postData = {
-      stub: this.state.feederStub,
-      name: this.state.feederName,
-      location: {
-        latitude: this.state.feederLatitude,
-        longitude: this.state.feederLongitude
-      },
-      lastPing: 'never'
-    }
-    axios.post('/api/feeders', postData)
-      .then(res => {
-        console.log(res.data);
+
+    this.props.addFeeder(
+      this.state.feederStub,
+      this.state.feederName,
+      this.state.feederLatitude,
+      this.state.feederLongitude,
+      (error) => {
+        if (error) {
+          console.log("ERROR: Could not add feeder.");
+          return;
+        }
         this.setState({
           feederName: '',
           feederStub: '',
           feederLatitude: '',
           feederLongitude: ''
-        })
-        // Also remember to reload data.
-      })
-      .catch((error) => {
-        console.log(error);
+        });
       });
   }
 

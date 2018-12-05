@@ -7,6 +7,7 @@ class EventTable extends Component {
     super(props);
 
     this.deleteItem = this.deleteItem.bind(this);
+    this.getEvents = this.getEvents.bind(this);
 
     this.state = {
       events: []
@@ -65,6 +66,13 @@ class EventTable extends Component {
   render() {
     return(
       <div>
+        <br/>
+        <Button
+          onClick={() => this.getEvents()}
+          bsSize="small"
+          >
+          <Glyphicon glyph="refresh"/>
+        </Button>
         <br/>
         <Table striped bordered condensed hover>
           <thead>

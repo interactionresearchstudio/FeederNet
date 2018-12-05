@@ -1,38 +1,11 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Table, Button, Glyphicon } from 'react-bootstrap';
 
 class FeederTable extends Component {
-  constructor(props) {
-    super(props);
-
-    this.deleteItem = this.deleteItem.bind(this);
-
-    this.state = {
-      feeders: []
-    };
-  }
-
-  componentDidMount() {
-    this.getFeeders();
-  }
-
-  // GET birds
-  getFeeders() {
-    axios.get('/api/feeders')
-      .then(response => {
-        this.setState({
-          feeders: response.data
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
   // Build table rows
   buildRows() {
-    return this.state.feeders.map((object, i) => {
+    return this.props.feeders.map((object, i) => {
       return(
         <tr key={i}>
           <td>{object.name}</td>
@@ -42,7 +15,7 @@ class FeederTable extends Component {
           <td>{object.lastPing}</td>
           <td>
             <Button
-              onClick={() => this.deleteItem(object._id)}
+              onClick={() => this.props.deleteFeeder(object._id)}
               bsSize="xsmall"
               >
               <Glyphicon glyph="remove"/>
@@ -53,16 +26,6 @@ class FeederTable extends Component {
     });
   }
 
-  deleteItem(itemId) {
-    console.log("Delete item with ID " + itemId);
-    axios.delete('/api/feeder/' + itemId)
-      .then(res => {
-        this.getFeeders();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
   render() {
     return(

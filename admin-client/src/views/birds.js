@@ -11,7 +11,7 @@ class Birds extends Component {
     };
 
     this.addBird = this.addBird.bind(this);
-    this.deleteItem = this.deleteItem.bind(this);
+    this.deleteBird = this.deleteBird.bind(this);
   }
 
   componentDidMount() {
@@ -48,7 +48,7 @@ class Birds extends Component {
       });
   }
 
-  deleteItem(itemId) {
+  deleteBird(itemId) {
     console.log("Delete item with ID " + itemId);
     axios.delete('/api/bird/' + itemId)
       .then(res => {
@@ -69,7 +69,7 @@ class Birds extends Component {
         <br/>
         <BirdTable
           birds={ this.state.birds }
-          deleteBird={ this.deleteItem }
+          deleteBird={ this.deleteBird }
         />
       </div>
     );
