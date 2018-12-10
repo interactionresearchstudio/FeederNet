@@ -27,8 +27,12 @@ function getFeederId(req, res, next) {
 // Add new event
 function addEvent(req, res, next) {
   var ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  var pingType = 'ping';
+  if (req.body.type == 'powerup') {
+    pingType = 'powerup';
+  }
   var newEvent = new Event({
-    type: 'ping-' + req.body.stub,
+    type: pingType + '-' + req.body.stub,
     ip: ipAddress,
     datetime: res.locals.timestamp
   });
@@ -36,7 +40,11 @@ function addEvent(req, res, next) {
     if (err) {
       res.json({'ERROR': err});
     } else {
-      console.log("INFO: Added ping event.");
+      if (pingType == 'ping') {
+        console.log("INFO: Added ping event.");
+      } else if (pingType == 'powerup') {
+        console.log("INFO: Added powerup event");
+      }
       next();
     }
   });
