@@ -61,8 +61,10 @@ function addWaypoint(req, res, next) {
 	res.locals.timestamp = "";
 	if (req.body.datetime == "" || req.body.datetime == " ") {
 		res.locals.timestamp = String(Math.floor(new Date() / 1000));
+    res.locals.eventType = "";
 	} else {
 		res.locals.timestamp = req.body.datetime;
+    res.locals.eventType = '-cached';
 	}
     var newWaypoint = new Waypoint({
         datetime: res.locals.timestamp
@@ -87,7 +89,7 @@ function addEvent(req, res) {
     console.log('Add event');
     var ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     var newEvent = new Event({
-        type: 'recordTrack',
+        type: 'recordTrack' + res.locals.eventType,
         ip: ipAddress,
         datetime: res.locals.timestamp
     });
