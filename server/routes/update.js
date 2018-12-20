@@ -10,7 +10,6 @@ router.get('/update', getTags, sendBinary, addEvent);
 
 // Get available tags from GitHub repository.
 function getTags(req, res, next) {
-  console.log(req);
   axios.get('https://api.github.com/repos/interactionresearchstudio/RFIDBirdFeeder/git/refs/tags')
   .then(response => {
     semverSort.desc(response.data.map((tag) => {
