@@ -25,6 +25,7 @@ const waypoints = require('./routes/waypoints.js');
 const recordTrack = require('./routes/recordTrack.js');
 const time = require('./routes/time.js');
 const ping = require('./routes/ping.js');
+const update = require('./routes/update.js');
 
 // Express instance
 var app = express();
@@ -44,6 +45,7 @@ app.use('/api/', waypoints);
 app.use('/api/', recordTrack);
 app.use('/api/', time);
 app.use('/api/', ping);
+app.use('/api/', update);
 
 // Server configuration
 var server = http.createServer(app);
