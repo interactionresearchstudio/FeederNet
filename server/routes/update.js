@@ -41,6 +41,7 @@ function sendBinary(req, res, next) {
       latestVersion +
       "/RFIDBirdFeeder.ino.adafruit.bin";
     request.get(downloadUrl).pipe(res);
+    next();
   }
 }
 
