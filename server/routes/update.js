@@ -12,6 +12,7 @@ router.get('/update', getTags, sendBinary, addEvent);
 function getTags(req, res, next) {
   axios.get('https://api.github.com/repos/interactionresearchstudio/RFIDBirdFeeder/git/refs/tags')
   .then(response => {
+    console.log(response.data);
     semverSort.desc(response.data.map((tag) => {
       return tag.ref;
     }));
