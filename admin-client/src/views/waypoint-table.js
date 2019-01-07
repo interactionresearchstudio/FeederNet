@@ -34,6 +34,10 @@ class WaypointTable extends Component {
   // Build table rows
   buildRows() {
     return this.state.waypoints.map((object, i) => {
+      if (object.bird == null) {
+        object.bird.name = "Deleted";
+        object.bird.rfid = "Deleted"
+      }
       return(
         <tr key={i}>
           <td>{object.bird.name}</td>
