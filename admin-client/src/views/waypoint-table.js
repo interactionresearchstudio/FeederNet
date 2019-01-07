@@ -37,6 +37,9 @@ class WaypointTable extends Component {
       if (object.bird == null) {
         object.bird = {name: "Deleted", rfid: "Deleted"};
       }
+      if (object.feeder == null) {
+        object.feeder = {name: "Deleted", stub: "Deleted"};
+      }
       return(
         <tr key={i}>
           <td>{object.bird.name}</td>
