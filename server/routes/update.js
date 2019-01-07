@@ -1,6 +1,5 @@
 var express = require('express');
 var axios = require('axios');
-var semverSort = require('semver-sort');
 var request = require('request');
 var router = express.Router();
 var Event = require('../models/event');
@@ -10,13 +9,10 @@ router.get('/update', getTags, sendBinary, addEvent);
 
 // Get available tags from GitHub repository.
 function getTags(req, res, next) {
-  axios.get('https://api.github.com/repos/interactionresearchstudio/RFIDBirdFeeder/git/refs/tags')
+  axios.get('https://api.github.com/repos/interactionresearchstudio/RFIDBirdFeeder/releases/latest')
   .then(response => {
-    console.log(response.data);
-    semverSort.desc(response.data.map((tag) => {
-      return tag.ref;
-    }));
-    res.locals.tags = response.data;
+    console.log("Latest release tag: " + response.data.tag_name + " | Asset URL: " + response.data.assets[0].browser_download_url);
+    res.locals.release = response.data;
     next();
   })
   .catch(error => {
@@ -30,17 +26,14 @@ function getTags(req, res, next) {
 function sendBinary(req, res, next) {
   var espVersion = req.get('x-ESP8266-version');
   console.log("INFO: Firmware version: " + espVersion);
-  var latestVersion = res.locals.tags[0].ref.substr(res.locals.tags[0].ref.lastIndexOf('/') + 1);
+  var latestVersion = res.locals.release.tag_name;
   console.log("INFO: Latest version: " + latestVersion);
   if (espVersion == latestVersion) {
     console.log("INFO: No update needed.");
     res.sendStatus(304);
   } else {
     console.log("INFO: Update required");
-    var downloadUrl =
-      "https://github.com/interactionresearchstudio/RFIDBirdFeeder/releases/download/" +
-      latestVersion +
-      "/RFIDBirdFeeder.ino.adafruit.bin";
+    var downloadUrl = res.locals.release.assets[0].browser_download_url;
     request.get(downloadUrl).pipe(res);
     next();
   }
