@@ -22,6 +22,7 @@ class EventTable extends Component {
   getEvents() {
     axios.get('/api/events')
       .then(response => {
+        response.data.sort((a, b) => parseFloat(b.datetime) - parseFloat(a.datetime));
         this.setState({
           events: response.data
         });

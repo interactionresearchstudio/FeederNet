@@ -4,6 +4,7 @@ import Birds from './views/birds';
 import Feeders from './views/feeders';
 import EventTable from './views/event-table';
 import WaypointTable from './views/waypoint-table';
+import SignupForm from './views/signup-form'
 import './App.css';
 
 class App extends Component {
@@ -25,6 +26,8 @@ class App extends Component {
     return (
       <div id="App" className="container">
         <h1>FeederNet Admin</h1>
+        <br/>
+        <SignupForm/>
         <br/>
         <Tabs
           activeKey={this.state.key}
