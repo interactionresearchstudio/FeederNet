@@ -5,22 +5,24 @@ class BirdTable extends Component {
 
   // Build table rows
   buildRows() {
-    return this.props.birds.map((object, i) => {
-      return(
-        <tr key={i}>
-          <td>{object.name}</td>
-          <td>{object.rfid}</td>
-          <td>
-            <Button
-              onClick={() => this.props.deleteBird(object._id)}
-              bsSize="xsmall"
-              >
-              <Glyphicon glyph="remove"/>
-            </Button>
-          </td>
-        </tr>
-      );
-    });
+    if (this.props.birds != null) {
+      return this.props.birds.map((object, i) => {
+        return(
+          <tr key={i}>
+            <td>{object.name}</td>
+            <td>{object.rfid}</td>
+            <td>
+              <Button
+                onClick={() => this.props.deleteBird(object._id)}
+                bsSize="xsmall"
+                >
+                <Glyphicon glyph="remove"/>
+              </Button>
+            </td>
+          </tr>
+        );
+      });
+    }
   }
 
   render() {

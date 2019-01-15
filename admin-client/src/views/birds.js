@@ -21,12 +21,17 @@ class Birds extends Component {
   getBirds() {
     axios.get('/api/birds')
       .then(response => {
+        console.log("Bird response: ");
+        console.log(response.data);
         this.setState({
           birds: response.data
         });
       })
       .catch((error) => {
         console.log(error);
+        this.setState({
+          birds: null
+        });
       });
   }
 

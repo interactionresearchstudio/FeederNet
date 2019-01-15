@@ -19,6 +19,24 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/node-testing', 
   }
 });
 
+// Check if user exists.
+const User = require('./models/user');
+User.findOne({'local.username': 'admin'}, (err, user) => {
+  if (err) {
+    console.log("ERROR: Admin user search failed");
+    console.log(err);
+  }
+  if (!user) {
+    console.log("INFO: Admin user not found in database. Setting...");
+    var adminUser = new User();
+    adminUser.local.username = "admin";
+    adminUser.local.password = adminUser.generateHash(process.env.ADMIN_PASSWORD || "adminpass");
+    adminUser.save((err) => {
+        console.log("INFO: Admin user created.");
+    });
+  }
+});
+
 // Routes
 const birds = require('./routes/birds.js');
 const feeders = require('./routes/feeders.js');

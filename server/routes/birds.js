@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Bird = require('../models/bird');
+var auth = require('./auth');
 
 router.get('/', (req, res, next) => {
     console.log('INFO: GET root.');
@@ -8,11 +9,11 @@ router.get('/', (req, res, next) => {
 });
 
 // API routes
-router.get('/birds', findAllBirds);
-router.get('/bird/:id', findBirdById);
-router.post('/birds', addBird);
-router.put('/bird/:id', updateBird);
-router.delete('/bird/:id', deleteBird);
+router.get('/birds', auth.isLoggedIn, findAllBirds);
+router.get('/bird/:id', auth.isLoggedIn, findBirdById);
+router.post('/birds', auth.isLoggedIn, addBird);
+router.put('/bird/:id', auth.isLoggedIn, updateBird);
+router.delete('/bird/:id', auth.isLoggedIn, deleteBird);
 
 // Get all birds
 function findAllBirds(req, res) {
