@@ -2,7 +2,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
-            files: ['Gruntfile', 'server/app.js', 'public/js/main.js', 'server/models/*.js', 'server/routes/*.js'],
+            files: ['Gruntfile', 'server/app.js', 'public/js/main.js', 'server/models/*.js', 'server/routes/*.js', 'server/config/*.js'],
             options: {
                 'esversion': 6
             }
