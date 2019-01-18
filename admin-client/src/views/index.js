@@ -9,6 +9,8 @@ class Index extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this.handleSelect = this.handleSelect.bind(this);
+
     this.state = {
       key: 1
     };
