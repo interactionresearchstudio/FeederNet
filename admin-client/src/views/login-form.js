@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel, Button, Alert } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 class LoginForm extends Component {
@@ -13,7 +14,8 @@ class LoginForm extends Component {
     this.state = {
       username: '',
       password: '',
-      showAlert: false
+      showAlert: false,
+      redirect: false
     };
   }
 
@@ -35,13 +37,20 @@ class LoginForm extends Component {
 
     axios.post('/api/login', postData)
       .then(res => {
-        console.log(res.data);
+        console.log("Login successful.");
+        this.setState({redirect: true});
       })
       .catch((error) => {
         console.log("Authentication failed!");
         console.log(error);
         this.setState({showAlert: true});
       });
+  }
+
+  handleRedirect() {
+    if (this.state.redirect) {
+      return <Redirect to="/"/>
+    }
   }
 
   renderAlert() {
@@ -58,6 +67,7 @@ class LoginForm extends Component {
     return(
       <div>
         {this.renderAlert()}
+        {this.handleRedirect()}
         <form id="login-form">
           <FormGroup controlId="username">
             <ControlLabel>Username</ControlLabel>
