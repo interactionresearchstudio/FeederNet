@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var Waypoint = require('../models/waypoint');
+var auth = require('./auth');
 
 // API routes
-router.get('/waypoints', findAllWaypoints);
-router.get('/waypoint/:id', findWaypointById);
-router.post('/waypoints', addWaypoint);
-router.delete('/waypoint/:id', deleteWaypoint);
+router.get('/waypoints', auth.isLoggedIn, findAllWaypoints);
+router.get('/waypoint/:id', auth.isLoggedIn, findWaypointById);
+router.post('/waypoints', auth.isLoggedIn, addWaypoint);
+router.delete('/waypoint/:id', auth.isLoggedIn, deleteWaypoint);
 
 // Get all waypoints
 function findAllWaypoints(req, res) {

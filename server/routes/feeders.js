@@ -1,13 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var Feeder = require('../models/feeder');
+var auth = require('./auth');
 
 // API routes
-router.get('/feeders', findAllFeeders);
-router.get('/feeder/:id', findFeederById);
-router.post('/feeders', addFeeder);
-router.put('/feeder/:id', updateFeeder);
-router.delete('/feeder/:id', deleteFeeder);
+router.get('/feeders', auth.isLoggedIn, findAllFeeders);
+router.get('/feeder/:id', auth.isLoggedIn, findFeederById);
+router.post('/feeders', auth.isLoggedIn, addFeeder);
+router.put('/feeder/:id', auth.isLoggedIn, updateFeeder);
+router.delete('/feeder/:id', auth.isLoggedIn, deleteFeeder);
 
 // Get all feeders
 function findAllFeeders(req, res) {

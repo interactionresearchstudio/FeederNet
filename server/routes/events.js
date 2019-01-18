@@ -1,13 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var Event = require('../models/event');
+var auth = require('./auth');
 
 // API routes
-router.get('/events', findAllEvents);
-router.get('/event/:id', findEventById);
+router.get('/events', auth.isLoggedIn, findAllEvents);
+router.get('/event/:id', auth.isLoggedIn, findEventById);
 router.post('/events', addEvent);
 router.put('/event/:id', updateEvent);
-router.delete('/event/:id', deleteEvent);
+router.delete('/event/:id', auth.isLoggedIn, deleteEvent);
 
 // Get all events
 function findAllEvents(req, res) {
