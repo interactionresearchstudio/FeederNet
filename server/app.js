@@ -7,6 +7,7 @@ const http = require('http');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const port = process.env.PORT || 5000;
 
@@ -17,6 +18,17 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/node-testing', 
   } else {
     console.log('Connected to Database!');
   }
+});
+
+// Session store
+const store = new MongoDBStore({
+  uri: process.env.MONGODB_URI || 'mongodb://localhost/node-testing',
+  collection: 'sessions'
+});
+
+store.on('error', (error) => {
+  assert.ifError(error);
+  assert.ok(false);
 });
 
 // Check if user exists.
@@ -59,7 +71,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(require('express-session')({ secret: process.env.SESSION_SECRET || 'keyboard cat', resave: false, saveUninitialized: false }));
+app.use(require('express-session')({
+  secret: process.env.SESSION_SECRET || 'keyboard cat',
+  store: store,
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/admin', express.static(__dirname + '../../admin-client/build/'));
