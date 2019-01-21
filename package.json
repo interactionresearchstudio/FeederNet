@@ -36,7 +36,7 @@
     "server": "node ./server/app",
     "client": "cd feedernet-client && npm start",
     "admin-client": "cd admin-client && npm start",
-    "test": "mocha",
+    "test": "mocha test --exit",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "admin-dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn admin-client\""
   },

@@ -15,7 +15,7 @@ chai.use(chaiHttp);
 
 describe('Route - Birds', () => {
 
-    beforeEach((done) => {
+    before((done) => {
         var newBird = new Bird({
             rfid: 'test-rfid-number',
             name: 'test-name'
@@ -25,7 +25,7 @@ describe('Route - Birds', () => {
         });
     });
 
-    afterEach((done) => {
+    after((done) => {
         try {
             Bird.collection.drop();
         } catch (e) {

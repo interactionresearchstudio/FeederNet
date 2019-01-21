@@ -59,7 +59,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+app.use(require('express-session')({ secret: process.env.SESSION_SECRET || 'keyboard cat', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/admin', express.static(__dirname + '../../admin-client/build/'));
@@ -79,7 +79,6 @@ app.use('/api/', login);
 var server = http.createServer(app);
 server.listen(port, () => {
     console.log('INFO: Server started.');
-    // TODO - Check if admin user exists. If it doesn't, create it.
 });
 
 module.exports = app;

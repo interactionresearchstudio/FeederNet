@@ -15,7 +15,7 @@ var should = chai.should();
 chai.use(chaiHttp);
 
 describe('Route - Ping', () => {
-  beforeEach((done) => {
+  before((done) => {
     // Create new feeder
     var newFeeder = new Feeder({
       stub: 'ping-test-feeder-stub',
@@ -33,7 +33,7 @@ describe('Route - Ping', () => {
     });
   });
 
-  afterEach((done) => {
+  after((done) => {
     for (let model of [Feeder, Event]) {
       try {
         model.collection.drop();

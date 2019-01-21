@@ -14,7 +14,7 @@ var should = chai.should();
 chai.use(chaiHttp);
 
 describe('Route - Events', () => {
-    beforeEach((done) => {
+    before((done) => {
         var newEvent = new Event({
             'type': 'test-type',
             'ip': '0.0.0.0',
@@ -25,7 +25,7 @@ describe('Route - Events', () => {
         });
     });
 
-    afterEach((done) => {
+    after((done) => {
         try {
             Event.collection.drop();
         } catch (e) {

@@ -15,7 +15,7 @@ chai.use(chaiHttp);
 
 describe('Route - Feeders', () => {
 
-    beforeEach((done) => {
+    before((done) => {
         var newFeeder = new Feeder({
             stub: 'feeder-stub',
             name: 'feeder-name',
@@ -31,7 +31,7 @@ describe('Route - Feeders', () => {
         });
     });
 
-    afterEach((done) => {
+    after((done) => {
         try {
             Feeder.collection.drop();
         } catch (e) {

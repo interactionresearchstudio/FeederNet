@@ -17,7 +17,7 @@ var should = chai.should();
 chai.use(chaiHttp);
 
 describe('Route - Record Track', () => {
-  beforeEach((done) => {
+  before((done) => {
     // Create new bird
     var newBird = new Bird({
       rfid: 'recordTrack-test-rfid-number',
@@ -43,7 +43,7 @@ describe('Route - Record Track', () => {
     });
   });
 
-  afterEach((done) => {
+  after((done) => {
     for (let model of [Bird, Feeder, Waypoint, Event]) {
       try {
         model.collection.drop();
