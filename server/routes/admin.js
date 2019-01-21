@@ -4,7 +4,7 @@ var router = express.Router();
 
 router.get('/*', (req, res, next) => {
     console.log('INFO: GET admin.');
-    res.sendFile(__dirname + '../../../admin-client/build/index.html');
+    res.sendFile(path.resolve('../../../admin-client/build/index.html'));
 });
 
 module.exports = router;
