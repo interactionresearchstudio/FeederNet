@@ -50,6 +50,7 @@ User.findOne({'local.username': 'admin'}, (err, user) => {
 });
 
 // Routes
+const admin = require('./routes/admin.js');
 const birds = require('./routes/birds.js');
 const feeders = require('./routes/feeders.js');
 const events = require('./routes/events.js');
@@ -79,7 +80,8 @@ app.use(require('express-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/admin', express.static(__dirname + '../../admin-client/build/'));
+//app.use('/admin', express.static(__dirname + '../../admin-client/build/'));
+app.use('/admin', admin);
 
 // Main routes
 app.use('/api/', birds);
