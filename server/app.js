@@ -81,7 +81,7 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 //app.use('/admin', express.static(__dirname + '../../admin-client/build/'));
-app.use('/admin', admin);
+app.use('/admin/', admin);
 
 // Main routes
 app.use('/api/', birds);
