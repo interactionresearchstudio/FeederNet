@@ -22,6 +22,7 @@ class WaypointTable extends Component {
   getWaypoints() {
     axios.get('/api/waypoints')
       .then(response => {
+        response.data.sort((a, b) => parseFloat(b.datetime) - parseFloat(a.datetime));
         this.setState({
           waypoints: response.data
         });
@@ -44,7 +45,7 @@ class WaypointTable extends Component {
         <tr key={i}>
           <td>{object.bird.name}</td>
           <td>{object.bird.rfid}</td>
-          <td>{object.feeder.stub}</td>
+          <td>{object.feeder.name}</td>
           <td>{this.convertTime(object.datetime)}</td>
           <td>
             <Button
@@ -99,7 +100,7 @@ class WaypointTable extends Component {
             <tr>
               <th>Bird Name</th>
               <th>RFID</th>
-              <th>Feeder Stub</th>
+              <th>Feeder Name</th>
               <th>Date and Time</th>
               <th>Actions</th>
             </tr>

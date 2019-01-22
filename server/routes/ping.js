@@ -18,6 +18,7 @@ function getFeederId(req, res, next) {
     } else {
       console.log("INFO: Found feeder in DB.");
       res.locals.feeder_id = feeder._id;
+      res.locals.feeder_name = feeder.name;
       res.locals.timestamp = String(Math.floor(new Date() / 1000));
       next();
     }
@@ -32,7 +33,7 @@ function addEvent(req, res, next) {
     pingType = 'powerup';
   }
   var newEvent = new Event({
-    type: pingType + '-' + req.body.stub,
+    type: pingType + ' - ' + res.locals.feeder_name,
     ip: ipAddress,
     datetime: res.locals.timestamp
   });

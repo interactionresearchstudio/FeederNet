@@ -83,7 +83,7 @@ describe('Route - Ping', () => {
         _res.body[0].should.have.property('type');
         _res.body[0].should.have.property('ip');
         _res.body[0].should.have.property('datetime');
-        _res.body[0].type.should.equal('ping-ping-test-feeder-stub');
+        _res.body[0].type.should.equal('ping - ping-test-feeder-name');
         done();
       });
     });

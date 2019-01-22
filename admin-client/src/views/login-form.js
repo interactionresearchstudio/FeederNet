@@ -37,6 +37,7 @@ class LoginForm extends Component {
 
     axios.post('/api/login', postData)
       .then(res => {
+        console.log(res);
         console.log("Login successful.");
         this.setState({redirect: true});
       })

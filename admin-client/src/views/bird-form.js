@@ -29,7 +29,7 @@ class BirdForm extends Component {
 
     this.props.addBird(this.state.birdName, this.state.birdRfid, (error) => {
       if (error) {
-        console.log("ERROR: Could not add bird.");
+        console.log(error);
         return;
       }
 
