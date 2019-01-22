@@ -80,8 +80,8 @@ app.use(require('express-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-//app.use('/admin', express.static(__dirname + '../../admin-client/build/'));
-app.use('/admin/', admin);
+app.use('/admin/', express.static(__dirname + '../../admin-client/build/'));
+//app.use('/admin/', admin);
 
 // Main routes
 app.use('/api/', birds);
@@ -93,6 +93,10 @@ app.use('/api/', time);
 app.use('/api/', ping);
 app.use('/api/', update);
 app.use('/api/', login);
+
+app.get('/admin/*', (req,res) =>{
+    res.sendFile(path.join(__dirname, '../', 'admin-client/build/index.html'));
+});
 
 // Server configuration
 var server = http.createServer(app);

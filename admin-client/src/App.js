@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route} from 'react-router-dom';
 import Index from './views/index';
 import LoginForm from './views/login-form';
 import './App.css';
@@ -8,7 +8,7 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
+      <Router basename="/admin">
         <div id="App" className="container">
           <h1>FeederNet Admin</h1>
           <br/>
