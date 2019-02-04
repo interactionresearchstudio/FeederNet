@@ -12,7 +12,9 @@ router.delete('/event/:id', auth.isLoggedIn, deleteEvent);
 
 // Get all events
 function findAllEvents(req, res) {
-    Event.find((err, events) => {
+    Event.find()
+    .populate('feeder')
+    .exec((err, events) => {
         if (err) {
             res.json({'ERROR': err});
         } else {
@@ -23,7 +25,9 @@ function findAllEvents(req, res) {
 
 // Get single event
 function findEventById(req, res) {
-    Event.findById(req.params.id, (err, event) => {
+    Event.findById(req.params.id)
+    .populate('feeder')
+    .exec((err, event) => {
         if (err) {
             res.json({'ERROR': err});
         } else {

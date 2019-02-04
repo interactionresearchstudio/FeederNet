@@ -33,20 +33,24 @@ function addEvent(req, res, next) {
     pingType = 'powerup';
   }
   var newEvent = new Event({
-    type: pingType + ' - ' + res.locals.feeder_name,
+    type: pingType,
     ip: ipAddress,
     datetime: res.locals.timestamp
   });
-  newEvent.save((err) => {
+  newEvent.save((err, event) => {
     if (err) {
       res.json({'ERROR': err});
+    } else if (!event) {
+      console.log("ERROR: No event object returned upon save.");
     } else {
-      if (pingType == 'ping') {
-        console.log("INFO: Added ping event.");
-      } else if (pingType == 'powerup') {
-        console.log("INFO: Added powerup event");
-      }
-      next();
+      event.addFeeder(res.locals.feeder_id).then((_event) => {
+        if (pingType == 'ping') {
+          console.log("INFO: Added ping event.");
+        } else if (pingType == 'powerup') {
+          console.log("INFO: Added powerup event");
+        }
+        next();
+      });
     }
   });
 }

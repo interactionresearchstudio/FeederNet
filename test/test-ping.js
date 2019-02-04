@@ -48,7 +48,7 @@ describe('Route - Ping', () => {
     done();
   });
 
-  it('should update lastPing of feeder and post new event on /ping POST', (done) => {
+  it('should update lastPing of feeder and create new event on /ping POST', (done) => {
     chai.request(server)
     .post('/api/ping')
     .send({
@@ -83,7 +83,14 @@ describe('Route - Ping', () => {
         _res.body[0].should.have.property('type');
         _res.body[0].should.have.property('ip');
         _res.body[0].should.have.property('datetime');
-        _res.body[0].type.should.equal('ping - ping-test-feeder-name');
+        _res.body[0].should.have.property('feeder');
+        _res.body[0].type.should.equal('ping');
+        _res.body[0].feeder.should.have.property('stub');
+        _res.body[0].feeder.should.have.property('name');
+        _res.body[0].feeder.should.have.property('location');
+        _res.body[0].feeder.should.have.property('lastPing');
+        _res.body[0].feeder.stub.should.equal('ping-test-feeder-stub');
+        _res.body[0].feeder.name.should.equal('ping-test-feeder-name');
         done();
       });
     });

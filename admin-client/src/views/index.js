@@ -6,6 +6,7 @@ import Birds from './birds';
 import Feeders from './feeders';
 import EventTable from './event-table';
 import WaypointTable from './waypoint-table';
+import LocationRadio from './location-radio';
 
 class Index extends Component {
   constructor(props, context) {
@@ -22,10 +23,15 @@ class Index extends Component {
     });
 
     this.handleSelect = this.handleSelect.bind(this);
+    this.updateFilter = this.updateFilter.bind(this);
 
     this.state = {
       key: 1,
-      redirect: false
+      redirect: false,
+      locationFilter: {
+        latitude: "0",
+        longitude: "0"
+      }
     };
   }
 
@@ -39,10 +45,17 @@ class Index extends Component {
     }
   }
 
+  updateFilter(location) {
+    this.setState({locationFilter: location});
+    console.log(location);
+  }
+
   render() {
     return(
       <div id="index">
         {this.handleRedirect()}
+        <LocationRadio updateFilter={this.updateFilter}/>
+        <br/>
         <Tabs
           activeKey={this.state.key}
           onSelect={this.handleSelect}
@@ -52,13 +65,13 @@ class Index extends Component {
             <Birds/>
           </Tab>
           <Tab eventKey={2} title="Feeders">
-            <Feeders/>
+            <Feeders locationFilter={this.state.locationFilter}/>
           </Tab>
           <Tab eventKey={3} title="Events">
-            <EventTable/>
+            <EventTable locationFilter={this.state.locationFilter}/>
           </Tab>
           <Tab eventKey={4} title="Waypoints">
-            <WaypointTable/>
+            <WaypointTable locationFilter={this.state.locationFilter}/>
           </Tab>
         </Tabs>
       </div>
