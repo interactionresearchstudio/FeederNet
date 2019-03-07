@@ -8,10 +8,13 @@ class BirdForm extends Component {
     this.handleRfidChange = this.handleRfidChange.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
 
     this.state = {
       birdName: '',
-      birdRfid: ''
+      birdRfid: '',
+      birdId: '',
+      updating: false
     };
   }
 
@@ -21,6 +24,15 @@ class BirdForm extends Component {
   }
   handleNameChange(e) {
     this.setState({ birdName: e.target.value });
+  }
+
+  placeData(birdData) {
+    this.setState({
+      birdName: birdData.name,
+      birdRfid: birdData.rfid,
+      birdId: birdData._id,
+      updating: true
+    });
   }
 
   // Handle submit
@@ -35,9 +47,46 @@ class BirdForm extends Component {
 
       this.setState({
         birdName: '',
-        birdRfid: ''
+        birdRfid: '',
+        birdId: '',
+        updating: false
       });
     });
+  }
+
+  handleUpdate(e) {
+    e.preventDefault();
+
+    this.props.updateBird(
+      this.state.birdId,
+      {
+        name: this.state.birdName,
+        rfid: this.state.birdRfid
+      }, (error) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+        this.setState({
+          birdName: '',
+          birdRfid: '',
+          birdId: '',
+          updating: false
+        });
+      });
+  }
+
+  renderButton() {
+    if(this.state.updating) {
+      return(
+        <Button type="submit" onClick={this.handleUpdate}>Update Bird</Button>
+      );
+    }
+    else {
+      return(
+        <Button type="submit" onClick={this.handleSubmit}>Add New Bird</Button>
+      );
+    }
   }
 
   render() {
@@ -68,7 +117,7 @@ class BirdForm extends Component {
           </Col>
         </Row>
         <div className="form-row">
-          <Button type="submit" onClick={this.handleSubmit}>Add New Bird</Button>
+          { this.renderButton() }
         </div>
       </form>
     );

@@ -7,11 +7,15 @@ class Birds extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      birds: []
+      birds: [],
     };
+
+    this.birdFormElement = React.createRef();
 
     this.addBird = this.addBird.bind(this);
     this.deleteBird = this.deleteBird.bind(this);
+    this.editBird = this.editBird.bind(this);
+    this.updateBird = this.updateBird.bind(this);
   }
 
   componentDidMount() {
@@ -62,17 +66,42 @@ class Birds extends Component {
     });
   }
 
+  editBird(itemId) {
+    axios.get('/api/bird/' + itemId)
+    .then(response => {
+      this.birdFormElement.current.placeData(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  updateBird(itemId, putData, callback) {
+    console.log("Update item with ID " + itemId);
+    axios.put('/api/bird/' + itemId, putData)
+    .then(res => {
+      this.getBirds();
+      callback(null);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
   render() {
     return(
       <div>
         <br/>
         <BirdForm
+          ref = { this.birdFormElement }
           addBird = { this.addBird }
+          updateBird = { this.updateBird }
           />
         <br/>
         <BirdTable
           birds={ this.state.birds }
           deleteBird={ this.deleteBird }
+          updateBird={ this.editBird }
           />
       </div>
     );

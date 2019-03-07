@@ -26,6 +26,12 @@ class FeederTable extends Component {
     });
   }
 
+  isFeederWithinFilter(locationFilter, feederLocation) {
+    if (locationFilter.latitude === "0" && locationFilter.longitude === "0") {
+      return true;
+    }
+  }
+
   convertTime(UNIX_timestamp) {
     var a = new Date(UNIX_timestamp * 1000);
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

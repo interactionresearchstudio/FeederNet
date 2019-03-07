@@ -18,6 +18,12 @@ class BirdTable extends Component {
                 >
                 <Glyphicon glyph="remove"/>
               </Button>
+              <Button
+                onClick={() => this.props.updateBird(object._id)}
+                bsSize="xsmall"
+                >
+                <Glyphicon glyph="pencil"/>
+              </Button>
             </td>
           </tr>
         );

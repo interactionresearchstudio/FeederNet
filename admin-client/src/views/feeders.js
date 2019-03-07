@@ -74,6 +74,7 @@ class Feeders extends Component {
         <FeederTable
           feeders = { this.state.feeders }
           deleteFeeder = { this.deleteFeeder }
+          locationFilter = {this.props.locationFilter}
         />
       </div>
     );

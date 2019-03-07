@@ -6,7 +6,6 @@ import Birds from './birds';
 import Feeders from './feeders';
 import EventTable from './event-table';
 import WaypointTable from './waypoint-table';
-import LocationRadio from './location-radio';
 
 class Index extends Component {
   constructor(props, context) {
@@ -54,7 +53,6 @@ class Index extends Component {
     return(
       <div id="index">
         {this.handleRedirect()}
-        <LocationRadio updateFilter={this.updateFilter}/>
         <br/>
         <Tabs
           activeKey={this.state.key}
