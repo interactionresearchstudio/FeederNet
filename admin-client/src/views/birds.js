@@ -70,6 +70,7 @@ class Birds extends Component {
     axios.get('/api/bird/' + itemId)
     .then(response => {
       this.birdFormElement.current.placeData(response.data);
+      window.scrollTo(0, 0)
     })
     .catch((error) => {
       console.log(error);
