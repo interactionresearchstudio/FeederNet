@@ -31,6 +31,8 @@ function addEvent(req, res, next) {
   var pingType = 'ping';
   if (req.body.type == 'powerup') {
     pingType = 'powerup';
+  } else if (req.body.type == 'lowbattery') {
+    pingType = 'lowbattery';
   }
   var newEvent = new Event({
     type: pingType,
