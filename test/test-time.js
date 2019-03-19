@@ -70,8 +70,12 @@ describe('Route - Time', () => {
       res.body.should.be.a('object');
       res.body.should.have.property('sunrise');
       res.body.should.have.property('sunset');
-      console.log("Sunrise: " + res.body.sunrise);
-      console.log("Sunset: " + res.body.sunset);
+      res.body.sunrise.should.have.property('hour');
+      res.body.sunrise.should.have.property('minute');
+      res.body.sunset.should.have.property('hour');
+      res.body.sunset.should.have.property('minute');
+      console.log("Sunrise: " + res.body.sunrise.hour + ":" + res.body.sunrise.minute);
+      console.log("Sunset: " + res.body.sunset.hour + ":" + res.body.sunset.minute);
       done();
     });
   });

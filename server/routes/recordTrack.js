@@ -97,7 +97,10 @@ function addEvent(req, res) {
         if (err) {
             res.json({'ERROR': err});
         } else {
+          newEvent.addFeeder(res.locals.feeder_id).then((_event) => {
+            console.log("INFO: Added recordTrack event.");
             res.json({'SUCCESS': newEvent});
+          });
         }
     });
 }

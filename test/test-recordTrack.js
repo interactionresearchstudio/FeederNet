@@ -75,6 +75,7 @@ describe('Route - Record Track', () => {
       res.body.SUCCESS.should.have.property('type');
       res.body.SUCCESS.should.have.property('ip');
       res.body.SUCCESS.should.have.property('datetime');
+      res.body.SUCCESS.should.have.property('feeder');
       res.body.SUCCESS.datetime.should.equal('recordTrack-test-date-time');
       chai.request(server)
       .get('/api/waypoints')

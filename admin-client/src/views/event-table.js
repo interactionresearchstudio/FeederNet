@@ -35,9 +35,15 @@ class EventTable extends Component {
   // Build table rows
   buildRows() {
     return this.state.events.map((object, i) => {
+      if (object.feeder == null) {
+        object.feeder = {
+          name: "Unknown"
+        };
+      }
       return(
         <tr key={i}>
           <td>{object.type}</td>
+          <td>{object.feeder.name}</td>
           <td>{object.ip}</td>
           <td>{this.convertTime(object.datetime)}</td>
           <td>
@@ -92,6 +98,7 @@ class EventTable extends Component {
           <thead>
             <tr>
               <th>Event Type</th>
+              <th>Feeder</th>
               <th>IP Address</th>
               <th>Date and Time</th>
               <th>Actions</th>
