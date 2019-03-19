@@ -25,7 +25,7 @@ function getSunriseSunset(req, res) {
       console.log('INFO: Sunrise: ' + sunrise + ' | Sunset: ' + sunset);
       res.json({
         'sunrise': {
-          'hour': sunrise.substring(0, 1),
+          'hour': parseInt(sunrise.substring(0, 1)),
           'minute': parseInt(sunrise.substring(sunrise.indexOf(':') + 1, sunrise.indexOf(':') + 3))
         },
         'sunset': {
@@ -38,12 +38,12 @@ function getSunriseSunset(req, res) {
       console.log("WARNING: Requesting sunrise/sunset times failed. Error: " + error);
       res.json({
         'sunrise': {
-          'hour': '6',
-          'minute': '0'
+          'hour': 6,
+          'minute': 0
         },
         'sunset': {
-          'hour': '18',
-          'minute': '0'
+          'hour': 18,
+          'minute': 0
         }
       });
     });
