@@ -6,9 +6,10 @@
     "axios": "^0.18.0",
     "react": "^16.6.1",
     "react-bootstrap": "^0.32.4",
+    "react-csv": "^1.1.1",
     "react-dom": "^16.6.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.1"
+    "react-scripts": "^2.1.8"
   },
   "homepage": "/admin",
   "proxy": "http://localhost:5000",

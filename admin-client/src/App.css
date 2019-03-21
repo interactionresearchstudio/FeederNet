@@ -4,3 +4,7 @@
 #login-form {
   width: 200px;
 }
+
+.btn-sm {
+  margin-right: 10px;
+}

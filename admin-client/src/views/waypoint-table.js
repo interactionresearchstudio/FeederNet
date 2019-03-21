@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Table, Button, Glyphicon } from 'react-bootstrap';
+import { CSVLink } from "react-csv";
 
 class WaypointTable extends Component {
   constructor(props) {
@@ -10,7 +11,8 @@ class WaypointTable extends Component {
     this.getWaypoints = this.getWaypoints.bind(this);
 
     this.state = {
-      waypoints: []
+      waypoints: [],
+      downloadableData: []
     };
   }
 
@@ -34,6 +36,7 @@ class WaypointTable extends Component {
 
   // Build table rows
   buildRows() {
+    this.state.downloadableData = [];
     return this.state.waypoints.map((object, i) => {
       if (object.bird == null) {
         object.bird = {name: "Deleted", rfid: "Deleted"};
@@ -41,6 +44,12 @@ class WaypointTable extends Component {
       if (object.feeder == null) {
         object.feeder = {name: "Deleted", stub: "Deleted"};
       }
+      this.state.downloadableData.push([
+        object.bird.name,
+        object.bird.rfid,
+        object.feeder.name,
+        object.datetime
+      ]);
       return(
         <tr key={i}>
           <td>{object.bird.name}</td>
@@ -94,6 +103,17 @@ class WaypointTable extends Component {
           >
           <Glyphicon glyph="refresh"/>
         </Button>
+        <Button
+          bsSize="small"
+          >
+          <CSVLink
+            data={this.state.downloadableData}
+            filename={"FeederNet " + this.convertTime(new Date()/1000)}
+            >
+            Download CSV
+          </CSVLink>
+        </Button>
+        <br/>
         <br/>
         <Table striped bordered condensed hover>
           <thead>
