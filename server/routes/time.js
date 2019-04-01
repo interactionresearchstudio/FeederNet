@@ -55,7 +55,7 @@ function getFeederLocation(req, res, next) {
     if (err) {
       res.json({'ERROR': err});
     } else if (!feeder) {
-      console.log("ERROR: Feeder stub not found.");
+      console.log("ERROR: Feeder stub " + req.body.stub + " not found.");
       res.send(400);
     } else {
       console.log("INFO: Found feeder in DB.");
