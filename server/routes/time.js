@@ -9,7 +9,13 @@ router.get('/time/sunrisesunset', getFeederLocation, getSunriseSunset);
 
 // Get time
 function getTime(req, res) {
-  res.json({'time': Math.floor(new Date() / 1000)});
+  var newDate = new Date();
+  if (isDaylightSavingTime(newDate)) {
+    console.log("INFO: Compensating for daylight saving time.");
+    res.json({'time': Math.floor(newDate.getTime() / 1000) + 3600000});
+  } else {
+    res.json({'time': Math.floor(newDate.getTime() / 1000)});
+  }
 }
 
 // Get sunrise / sunset and send to feeder
@@ -65,6 +71,12 @@ function getFeederLocation(req, res, next) {
       next();
     }
   });
+}
+
+function isDaylightSavingTime(d) {
+    let jan = new Date(d.getFullYear(), 0, 1).getTimezoneOffset();
+    let jul = new Date(d.getFullYear(), 6, 1).getTimezoneOffset();
+    return Math.max(jan, jul) != d.getTimezoneOffset();
 }
 
 module.exports = router;
