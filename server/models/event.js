@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 var Schema = mongoose.Schema;
 
 var eventSchema = new Schema({
@@ -15,5 +16,7 @@ eventSchema.methods.addFeeder = function(feeder_id) {
     this.feeder = feeder_id;
     return this.save();
 };
+
+eventSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('event', eventSchema);
