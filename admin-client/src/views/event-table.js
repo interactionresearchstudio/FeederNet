@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Table, Button, Glyphicon } from 'react-bootstrap';
+import ReactPaginate from 'react-paginate';
 
 class EventTable extends Component {
   constructor(props) {
@@ -10,7 +11,9 @@ class EventTable extends Component {
     this.getEvents = this.getEvents.bind(this);
 
     this.state = {
-      events: []
+      events: [],
+      offset: 0,
+      pageCount: 0,
     };
   }
 
@@ -20,11 +23,13 @@ class EventTable extends Component {
 
   // GET birds
   getEvents() {
-    axios.get('/api/events')
+    var limit = this.props.perPage;
+    var offset = this.state.offset;
+    axios.get('/api/events/' + offset + '/' + limit)
       .then(response => {
-        response.data.sort((a, b) => parseFloat(b.datetime) - parseFloat(a.datetime));
         this.setState({
-          events: response.data
+          events: response.data.docs,
+          pageCount: Math.ceil(response.data.total / response.data.limit),
         });
       })
       .catch((error) => {
@@ -83,6 +88,16 @@ class EventTable extends Component {
     return time;
   }
 
+  handlePageClick = data => {
+    var selected = data.selected;
+    var offset = Math.ceil(selected * this.props.perPage);
+
+    this.setState({ offset: offset }, () => {
+      this.getEvents();
+    });
+  };
+
+
   render() {
     return(
       <div>
@@ -108,6 +123,19 @@ class EventTable extends Component {
             {this.buildRows()}
           </tbody>
         </Table>
+        <ReactPaginate
+          previousLabel={'previous'}
+          nextLabel={'next'}
+          breakLabel={'...'}
+          breakClassName={'break-me'}
+          pageCount={this.state.pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={'pagination'}
+          subContainerClassName={'pages pagination'}
+          activeClassName={'active'}
+        />
       </div>
     );
   }

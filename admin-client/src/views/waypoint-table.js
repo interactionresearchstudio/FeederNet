@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Table, Button, Glyphicon } from 'react-bootstrap';
 import { CSVLink } from "react-csv";
+import ReactPaginate from 'react-paginate';
 
 class WaypointTable extends Component {
   constructor(props) {
@@ -12,6 +13,8 @@ class WaypointTable extends Component {
 
     this.state = {
       waypoints: [],
+      offset: 0,
+      pageCount: 0,
       downloadableData: []
     };
   }
@@ -22,12 +25,15 @@ class WaypointTable extends Component {
 
   // GET birds
   getWaypoints() {
-    axios.get('/api/waypoints')
+    var limit = this.props.perPage;
+    var offset = this.state.offset;
+    axios.get('/api/waypoints/' + offset + '/' + limit)
       .then(response => {
-        response.data.sort((a, b) => parseFloat(b.datetime) - parseFloat(a.datetime));
         this.setState({
-          waypoints: response.data
+          waypoints: response.data.docs,
+          pageCount: Math.ceil(response.data.total / response.data.limit),
         });
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -36,7 +42,6 @@ class WaypointTable extends Component {
 
   // Build table rows
   buildRows() {
-    this.state.downloadableData = [];
     return this.state.waypoints.map((object, i) => {
       if (object.bird == null) {
         object.bird = {name: "Deleted", rfid: "Deleted"};
@@ -44,12 +49,6 @@ class WaypointTable extends Component {
       if (object.feeder == null) {
         object.feeder = {name: "Deleted", stub: "Deleted"};
       }
-      this.state.downloadableData.push([
-        object.bird.name,
-        object.bird.rfid,
-        object.feeder.name,
-        object.datetime
-      ]);
       return(
         <tr key={i}>
           <td>{object.bird.name}</td>
@@ -93,6 +92,15 @@ class WaypointTable extends Component {
     return time;
   }
 
+  handlePageClick = data => {
+    var selected = data.selected;
+    var offset = Math.ceil(selected * this.props.perPage);
+
+    this.setState({ offset: offset }, () => {
+      this.getWaypoints();
+    });
+  };
+
   render() {
     return(
       <div>
@@ -107,7 +115,7 @@ class WaypointTable extends Component {
           bsSize="small"
           >
           <CSVLink
-            data={this.state.downloadableData}
+            data={this.state.waypoints}
             filename={"FeederNet " + this.convertTime(new Date()/1000)}
             >
             Download CSV
@@ -129,6 +137,19 @@ class WaypointTable extends Component {
             {this.buildRows()}
           </tbody>
         </Table>
+        <ReactPaginate
+          previousLabel={'previous'}
+          nextLabel={'next'}
+          breakLabel={'...'}
+          breakClassName={'break-me'}
+          pageCount={this.state.pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={'pagination'}
+          subContainerClassName={'pages pagination'}
+          activeClassName={'active'}
+        />
       </div>
     );
   }

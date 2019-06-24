@@ -66,10 +66,15 @@ class Index extends Component {
             <Feeders locationFilter={this.state.locationFilter}/>
           </Tab>
           <Tab eventKey={3} title="Events">
-            <EventTable locationFilter={this.state.locationFilter}/>
+            <EventTable
+              locationFilter={this.state.locationFilter}
+              perPage={100}/>
           </Tab>
           <Tab eventKey={4} title="Waypoints">
-            <WaypointTable locationFilter={this.state.locationFilter}/>
+            <WaypointTable
+              locationFilter={this.state.locationFilter}
+              perPage={100}
+            />
           </Tab>
         </Tabs>
       </div>
