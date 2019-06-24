@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 var Schema = mongoose.Schema;
 
 var waypointSchema = new Schema({
@@ -22,5 +23,7 @@ waypointSchema.methods.addFeeder = function(feeder_id) {
     this.feeder = feeder_id;
     return this.save();
 };
+
+waypointSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('waypoint', waypointSchema);

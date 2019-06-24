@@ -4,6 +4,7 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
+const async = require('async');
 
 // Load app and schemas
 const server = require('../server/app');
@@ -181,6 +182,76 @@ describe('Route - Waypoints', () => {
         done();
       });
     });
+  });
+
+  it('should return a number of paginated waypoints, with a page offset on /waypoints GET', (done) => {
+    // Create 10 events
+    var waypointNames = [
+      "paginated-test-0",
+      "paginated-test-1",
+      "paginated-test-2",
+      "paginated-test-3",
+      "paginated-test-4",
+      "paginated-test-5",
+      "paginated-test-6",
+      "paginated-test-7",
+      "paginated-test-8",
+      "paginated-test-9",
+    ];
+
+    var newBird = new Bird({
+      rfid: 'test-bird-rfid-number',
+      name: 'test-bird-name'
+    });
+
+    // Create new feeder
+    var newFeeder = new Feeder({
+      stub: 'test-feeder-stub',
+      name: 'test-feeder-name',
+      location: {
+        latitude: '1.0000',
+        longitude: '1.0000'
+      },
+      lastPing: 'never'
+    });
+
+    newBird.save((err, bird_data) => {
+      newFeeder.save((err, feeder_data) => {
+        async.each(waypointNames, (waypointName, callback) => {
+          var newWaypoint = new Waypoint({
+            datetime: waypointName
+          });
+          newWaypoint.save((err, data) => {
+            if (err) {
+              console.log("ERROR: Failed to save waypoint.");
+              callback();
+            } else {
+              newWaypoint.addBird(bird_data.id).then((_waypoint) => {
+                _waypoint.addFeeder(feeder_data.id).then((__waypoint) => {
+                  callback();
+                });
+              });
+            }
+          });
+        }, (err) => {
+          console.log("INFO: Requesting waypoints...");
+          chai.request(server)
+          .get('/api/waypoints/4/5')
+          .end((err, res) => {
+            console.log(res.body);
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.should.be.a('object');
+            res.body.should.have.property('docs');
+            res.body.docs.should.be.a('array');
+            res.body.docs.length.should.equal(5);
+            done();
+          });
+        });
+      });
+    });
+
+
   });
 
 });

@@ -5,6 +5,7 @@ var auth = require('./auth');
 
 // API routes
 router.get('/waypoints', auth.isLoggedIn, findAllWaypoints);
+router.get('/waypoints/:offset/:limit', auth.isLoggedIn, findPaginatedWaypoints);
 router.get('/waypoint/:id', auth.isLoggedIn, findWaypointById);
 router.post('/waypoints', auth.isLoggedIn, addWaypoint);
 router.delete('/waypoint/:id', auth.isLoggedIn, deleteWaypoint);
@@ -21,6 +22,23 @@ function findAllWaypoints(req, res) {
             res.json(waypoints);
         }
     });
+}
+
+// Get events with page limit
+function findPaginatedWaypoints(req, res) {
+  var options = {
+    sort: { datetime: -1 },
+    populate: ['bird', 'feeder'],
+    offset: parseInt(req.params.offset),
+    limit: parseInt(req.params.limit)
+  };
+  Waypoint.paginate({}, options, (err, events) => {
+      if (err) {
+        res.json({'ERROR': err});
+      } else {
+        res.json(events);
+      }
+  });
 }
 
 // Get single waypoint
