@@ -26,11 +26,12 @@ function findAllEvents(req, res) {
 
 // Get events with page limit
 function findPaginatedEvents(req, res) {
-  Event.paginate({},
-    {
-      offset: parseInt(req.params.offset),
-      limit: parseInt(req.params.limit)
-    }, (err, events) => {
+  var options = {
+    sort: { datetime: -1 },
+    offset: parseInt(req.params.offset),
+    limit: parseInt(req.params.limit)
+  };
+  Event.paginate({}, options, (err, events) => {
       if (err) {
         res.json({'ERROR': err});
       } else {

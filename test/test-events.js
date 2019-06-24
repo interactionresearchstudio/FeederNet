@@ -158,7 +158,7 @@ describe('Route - Events', () => {
 
   it('should return a number of paginated events, with a page offset on /events GET', (done) => {
     // Create 10 events
-    var eventNames = [
+    var eventDateTimes = [
       "paginated-test-0",
       "paginated-test-1",
       "paginated-test-2",
@@ -170,11 +170,11 @@ describe('Route - Events', () => {
       "paginated-test-8",
       "paginated-test-9",
     ];
-    async.each(eventNames, (eventName, callback) => {
+    async.each(eventDateTimes, (eventDateTime, callback) => {
       var newEvent = new Event({
-        'type': eventName,
+        'type': 'pagination-test-type',
         'ip': '0.0.0.0',
-        'datetime': 'paginated-test-datetime'
+        'datetime': eventDateTime
       });
       newEvent.save((err, data) => {
         if (err) {
@@ -195,7 +195,6 @@ describe('Route - Events', () => {
         res.body.should.have.property('docs');
         res.body.docs.should.be.a('array');
         res.body.docs.length.should.equal(5);
-        console.log(res.body);
         done();
       });
     });

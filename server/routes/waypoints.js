@@ -24,7 +24,7 @@ function findAllWaypoints(req, res) {
     });
 }
 
-// Get events with page limit
+// Get waypoints with page limit
 function findPaginatedWaypoints(req, res) {
   var options = {
     sort: { datetime: -1 },

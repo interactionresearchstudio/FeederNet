@@ -238,7 +238,6 @@ describe('Route - Waypoints', () => {
           chai.request(server)
           .get('/api/waypoints/4/5')
           .end((err, res) => {
-            console.log(res.body);
             res.should.have.status(200);
             res.should.be.json;
             res.body.should.be.a('object');
