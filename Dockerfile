@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 
 # Environment variables
 ENV MONGODB_URI mongodb://mongo:27017/feedernet
+ENV PORT 8080
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
