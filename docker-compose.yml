@@ -1,0 +1,19 @@
+version: "2"
+services:
+  feedernet:
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    container_name: feedernet
+    links:
+      - mongo
+    ports:
+      - "5000:8080"
+    restart: always
+  mongo:
+    container_name: mongo
+    image: andresvidal/rpi3-mongodb3
+    ports:
+      - "27017:27017"
+    volumes:
+      - "./data:/data/db"
