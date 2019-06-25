@@ -21,6 +21,7 @@ class WaypointTable extends Component {
 
   componentDidMount() {
     this.getWaypoints();
+    this.getDownloadableData();
   }
 
   // GET birds
@@ -34,6 +35,33 @@ class WaypointTable extends Component {
           pageCount: Math.ceil(response.data.total / response.data.limit),
         });
         console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  getDownloadableData() {
+    var data = [];
+    axios.get('/api/waypoints')
+      .then(response => {
+        response.data.forEach((waypoint) => {
+          if (waypoint.bird == null) {
+            waypoint.bird = {name: "Deleted", rfid: "Deleted"};
+          }
+          if (waypoint.feeder == null) {
+            waypoint.feeder = {name: "Deleted", stub: "Deleted"};
+          }
+          data.push({
+            name: waypoint.bird.name,
+            rfid: waypoint.bird.rfid,
+            feeder: waypoint.feeder.name,
+            datetime: this.convertTime(waypoint.datetime)
+          });
+        });
+        this.setState({
+          downloadableData: data
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -115,7 +143,7 @@ class WaypointTable extends Component {
           bsSize="small"
           >
           <CSVLink
-            data={this.state.waypoints}
+            data={this.state.downloadableData}
             filename={"FeederNet " + this.convertTime(new Date()/1000)}
             >
             Download CSV
