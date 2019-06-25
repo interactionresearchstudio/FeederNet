@@ -1,4 +1,4 @@
-FROM node:11.0.0-alpine
+FROM arm32v7/node:11.0.0
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -7,8 +7,10 @@ WORKDIR /usr/src/app
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 COPY package*.json ./
+COPY yarn.lock ./
 
-RUN npm install
+RUN apt-get -y install yarn
+RUN yarn install
 
 # Bundle app source
 COPY . .
