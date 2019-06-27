@@ -101,7 +101,7 @@ app.get('/admin/*', (req,res) =>{
 // Server configuration
 var server = http.createServer(app);
 server.listen(port, () => {
-    console.log('INFO: Server started.');
+    console.log('INFO: Server started on port ' + port);
 });
 
 module.exports = app;
