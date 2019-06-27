@@ -19,6 +19,6 @@ RUN yarn install
 # Bundle app source
 COPY . .
 
-EXPOSE PORT
+EXPOSE 4000
 
 CMD [ "npm", "start" ]
