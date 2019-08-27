@@ -13,8 +13,14 @@ ENV PORT 4000
 COPY package*.json ./
 COPY yarn.lock ./
 
+RUN apt-get install python
+RUN curl -O https://bootstrap.pypa.io/get-pip.py
+RUN python get-pip.py
+RUN pip install esptool
+
 RUN npm install -g yarn@1.12.3
 RUN yarn install
+
 
 # Bundle app source
 COPY . .

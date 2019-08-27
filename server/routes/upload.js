@@ -10,17 +10,20 @@ router.get('/upload',upload);
 
 
 function upload(req,res){
-   
+ 
     esptool({
   chip: "esp8266",
-  port: "/dev/tty.usbserial-A700eM8o",
-  baud: 460800,
+  port: "/dev/ttyAMA0",
+  baud: 115200,
   files: {
-    0x0000: "/var/folders/zb/m73fl1w946b2_7p1ywmftzk00000gn/T/arduino_build_921874/Blink.ino.bin"
+    0x0000: "build/blink.bin"
   }
   }, (err) => {
-    if(err) throw err; // hopefully I tell you *WHAT* went wrong
+    if(err) res.json({"ERROR":err});
+    else{ // hopefully I tell you *WHAT* went wrong
     console.log("Nothing went wrong!");
+    res.json({"SUCCESS":"success"});
+  }
   });  
 
 }
