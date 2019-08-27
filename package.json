@@ -3,8 +3,7 @@
   "version": "2.0.0",
   "description": "RFID Feeder Server",
   "engines": {
-    "node": "11.0.0",
-    "yarn": "1.12.3"
+    "node": "11.0.0"
   },
   "main": "app.js",
   "dependencies": {
@@ -13,6 +12,7 @@
     "body-parser": "^1.18.3",
     "connect-mongodb-session": "^2.0.6",
     "cookie-parser": "^1.4.3",
+    "esptool-wrapper": "^1.0.4",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "mongoose": "^5.3.8",
