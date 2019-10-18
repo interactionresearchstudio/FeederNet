@@ -9,11 +9,13 @@ services:
       - mongo
     ports:
       - "4000:4000"
-    restart: always
+    restart: on-failure
   mongo:
     container_name: mongo
     image: andresvidal/rpi3-mongodb3
+    command: ["mongod", "--journal"]
     ports:
       - "27017:27017"
+    restart: on-failure
     volumes:
       - "./data:/data/db"
