@@ -8,7 +8,8 @@ var feederSchema = new Schema({
         latitude: String,
         longitude: String
     },
-    lastPing: String
+    lastPing: String,
+    lastReportedRssi: Number
 });
 
 module.exports = mongoose.model('feeder', feederSchema);

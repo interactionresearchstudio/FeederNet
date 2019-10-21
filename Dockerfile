@@ -13,9 +13,9 @@ ENV PORT 4000
 COPY package*.json ./
 COPY yarn.lock ./
 
-RUN npm install -g yarn@1.12.3
+RUN npm install -g yarn
 RUN yarn install
-
+  
 # Bundle app source
 COPY . .
 

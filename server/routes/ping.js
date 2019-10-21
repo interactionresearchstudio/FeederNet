@@ -4,7 +4,7 @@ var Event = require('../models/event');
 var Feeder = require('../models/feeder');
 
 // API routes
-router.post('/ping', getFeederId, addEvent, updateLastPing);
+router.post('/ping', getFeederId, addEvent, updateLastPing, updateLastReportedRssi);
 
 // Get Feeder ID from stub
 function getFeederId(req, res, next) {
@@ -58,7 +58,7 @@ function addEvent(req, res, next) {
 }
 
 // Update lastPing
-function updateLastPing(req, res) {
+function updateLastPing(req, res, next) {
   Feeder.findById(res.locals.feeder_id, (err, feeder) => {
     feeder.lastPing = res.locals.timestamp;
     if (req.body.lastPing) feeder.lastPing = req.body.lastPing;
@@ -67,11 +67,26 @@ function updateLastPing(req, res) {
         res.json({'ERROR': err});
       } else {
         console.log("INFO: Updated feeder lastPing.");
-        res.json({'UPDATED': feeder});
+        next();
       }
     });
   });
 
+}
+
+// Update last reported RSSI
+function updateLastReportedRssi(req, res) {
+  Feeder.findById(res.locals.feeder_id, (err, feeder) => {
+    feeder.lastReportedRssi = req.body.rssi;
+    feeder.save((err) => {
+      if (err) {
+        res.json({'ERROR': err});
+      } else {
+        console.log("INFO: Updated feeder RSSI to " + req.body.rssi);
+        res.json({'UPDATED': feeder});
+      }
+    });
+  });
 }
 
 module.exports = router;

@@ -23,7 +23,8 @@ describe('Route - Feeders', () => {
                 latitude: '1.0000',
                 longitude: '1.0000'
             },
-            lastPing: 'never'
+            lastPing: 'never',
+            lastReportedRssi: 0
         });
 
         newFeeder.save((err) => {
@@ -62,6 +63,7 @@ describe('Route - Feeders', () => {
                 res.body[0].location.latitude.should.equal('1.0000');
                 res.body[0].location.longitude.should.equal('1.0000');
                 res.body[0].lastPing.should.equal('never');
+                res.body[0].lastReportedRssi.should.equal(0);
                 done();
             });
     });
@@ -74,7 +76,8 @@ describe('Route - Feeders', () => {
                 latitude: '1.0000',
                 longitude: '1.0000'
             },
-            lastPing: 'never'
+            lastPing: 'never',
+            lastReportedRssi: 0
         });
         newFeeder.save((err, data) => {
             chai.request(server)
@@ -96,6 +99,7 @@ describe('Route - Feeders', () => {
                     res.body.location.latitude.should.equal('1.0000');
                     res.body.location.longitude.should.equal('1.0000');
                     res.body.lastPing.should.equal('never');
+                    res.body.lastReportedRssi.should.equal(0);
                     done();
                 });
         });
@@ -108,7 +112,7 @@ describe('Route - Feeders', () => {
                 'stub': 'post-test-stub',
                 'name': 'post-test-name',
                 'location': {'latitude': '1.0000', 'longitude': '1.0000'},
-                'lastPing': 'never'
+                'lastPing': 'never',
             })
             .end((err, res) => {
                 res.should.have.status(200);

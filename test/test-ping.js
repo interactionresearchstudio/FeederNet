@@ -24,7 +24,8 @@ describe('Route - Ping', () => {
         latitude: '1.0000',
         longitude: '1.0000'
       },
-      lastPing: 'never'
+      lastPing: 'never',
+      lastReportedRssi: 0
     });
 
     // Save data
@@ -52,7 +53,8 @@ describe('Route - Ping', () => {
     chai.request(server)
     .post('/api/ping')
     .send({
-      'stub': 'ping-test-feeder-stub'
+      'stub': 'ping-test-feeder-stub',
+      'rssi': 50
     })
     .end((err, res) => {
       res.should.have.status(200);
@@ -72,7 +74,8 @@ describe('Route - Ping', () => {
       res.body.UPDATED.location.should.have.property('longitude');
       res.body.UPDATED.location.latitude.should.equal('1.0000');
       res.body.UPDATED.location.longitude.should.equal('1.0000');
-      res.body.UPDATED.lastPing.should.not.equal('never');;
+      res.body.UPDATED.lastPing.should.not.equal('never');
+      res.body.UPDATED.lastReportedRssi.should.equal(50);
       chai.request(server)
       .get('/api/events')
       .end((_err, _res) => {
