@@ -13,6 +13,7 @@ class FeederTable extends Component {
           <td>{object.location.latitude}</td>
           <td>{object.location.longitude}</td>
           <td>{this.convertTime(object.lastPing)}</td>
+          <td>{object.lastReportedRssi}</td>
           <td>
             <Button
               onClick={() => this.props.deleteFeeder(object._id)}
@@ -55,6 +56,7 @@ class FeederTable extends Component {
             <th>Latitude</th>
             <th>Longitude</th>
             <th>Last Ping</th>
+            <th>Signal Strength</th>
             <th>Actions</th>
           </tr>
         </thead>

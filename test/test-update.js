@@ -24,6 +24,7 @@ describe('Route - Update', () => {
       done();
     });
   });
+  
   it('should return a 304 when no update is required', (done) => {
     chai.request('https://api.github.com')
     .get('/repos/interactionresearchstudio/RFIDBirdFeeder/releases/latest')

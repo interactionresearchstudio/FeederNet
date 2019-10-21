@@ -40,7 +40,8 @@
     "admin-client": "cd admin-client && npm start",
     "test": "mocha test --exit --timeout 4000",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "admin-dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn admin-client\""
+    "admin-dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn admin-client\"",
+    "admin-build": "cd admin-client && yarn build"
   },
   "repository": {
     "type": "git",
