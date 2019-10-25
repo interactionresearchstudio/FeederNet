@@ -28,7 +28,7 @@ function sendBinary(req, res, next) {
   console.log("INFO: Firmware version: " + espVersion);
   var latestVersion = res.locals.release.tag_name;
   console.log("INFO: Latest version: " + latestVersion);
-  if (espVersion == latestVersion) {
+  if (espVersion >= latestVersion) {
     console.log("INFO: No update needed.");
     res.sendStatus(304);
   } else {
