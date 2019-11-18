@@ -10,7 +10,7 @@ function program(req, res) {
   console.log("Attempting programming...");
   esptool({
     chip: 'esp8266',
-    port: '/dev/tty.usbserial-AI05DMZP',
+    port: '/dev/ttyUSB0',
     baud: 115200,
     files: {
       0x00000: __dirname + '/app.bin'
