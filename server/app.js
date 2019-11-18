@@ -60,6 +60,7 @@ const time = require('./routes/time.js');
 const ping = require('./routes/ping.js');
 const update = require('./routes/update.js');
 const login = require('./routes/login.js');
+const program = require('./routes/program.js');
 
 // Express instance
 var app = express();
@@ -93,6 +94,7 @@ app.use('/api/', time);
 app.use('/api/', ping);
 app.use('/api/', update);
 app.use('/api/', login);
+app.use('/api/', program);
 
 app.get('/admin/*', (req,res) =>{
     res.sendFile(path.join(__dirname, '../', 'admin-client/build/index.html'));
