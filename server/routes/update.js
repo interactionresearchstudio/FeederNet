@@ -28,14 +28,19 @@ function sendBinary(req, res, next) {
   console.log("INFO: Firmware version: " + espVersion);
   var latestVersion = res.locals.release.tag_name;
   console.log("INFO: Latest version: " + latestVersion);
-  if (espVersion >= latestVersion) {
+  if (espVersion.charAt(0) === 'v') espVersion = espVersion.substring(1);
+  if (latestVersion.charAt(0) === 'v') latestVersion = latestVersion.substring(1);
+  if (versionCompare(espVersion, latestVersion) >= 0) {
     console.log("INFO: No update needed.");
     res.sendStatus(304);
-  } else {
+  } else if (versionCompare(espVersion, latestVersion) < 0) {
     console.log("INFO: Update required");
     var downloadUrl = res.locals.release.assets[0].browser_download_url;
     request.get(downloadUrl).pipe(res);
     next();
+  } else {
+    console.log("WARN: semver comparison returned null. One of them is invalid! Returning 500...");
+    res.sendStatus(500);
   }
 }
 
@@ -54,6 +59,53 @@ function addEvent(req, res) {
       console.log("INFO: Added update event");
     }
   });
+}
+
+function versionCompare(v1, v2, options) {
+  var lexicographical = options && options.lexicographical,
+  zeroExtend = options && options.zeroExtend,
+  v1parts = v1.split('.'),
+  v2parts = v2.split('.');
+
+  function isValidPart(x) {
+    return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
+  }
+
+  if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
+    return NaN;
+  }
+
+  if (zeroExtend) {
+    while (v1parts.length < v2parts.length) v1parts.push("0");
+    while (v2parts.length < v1parts.length) v2parts.push("0");
+  }
+
+  if (!lexicographical) {
+    v1parts = v1parts.map(Number);
+    v2parts = v2parts.map(Number);
+  }
+
+  for (var i = 0; i < v1parts.length; ++i) {
+    if (v2parts.length == i) {
+      return 1;
+    }
+
+    if (v1parts[i] == v2parts[i]) {
+      continue;
+    }
+    else if (v1parts[i] > v2parts[i]) {
+      return 1;
+    }
+    else {
+      return -1;
+    }
+  }
+
+  if (v1parts.length != v2parts.length) {
+    return -1;
+  }
+
+  return 0;
 }
 
 module.exports = router;

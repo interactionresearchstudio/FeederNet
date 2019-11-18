@@ -20,11 +20,10 @@ describe('Route - Update', () => {
     .end((err, res) => {
       res.should.have.status(200);
       res.should.have.header('content-type', 'application/octet-stream');
-      console.log(res.body);
       done();
     });
   });
-  
+
   it('should return a 304 when no update is required', (done) => {
     chai.request('https://api.github.com')
     .get('/repos/interactionresearchstudio/RFIDBirdFeeder/releases/latest')
@@ -36,6 +35,26 @@ describe('Route - Update', () => {
         _res.should.have.status(304);
         done();
       });
+    });
+  });
+
+  it('should return a 304 when the feeder version is higher than the GitHub version', (done) => {
+    chai.request(server)
+    .get('/api/update')
+    .set('x-ESP8266-version', 'v100.0')
+    .end((err, res) => {
+      res.should.have.status(304);
+      done();
+    });
+  });
+
+  it('should return a 500 if one of the semvers is invalid', (done) => {
+    chai.request(server)
+    .get('/api/update')
+    .set('x-ESP8266-version', 'v1a.0f')
+    .end((err, res) => {
+      res.should.have.status(500);
+      done();
     });
   });
 });
