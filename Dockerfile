@@ -15,7 +15,13 @@ COPY yarn.lock ./
 
 RUN npm install -g yarn
 RUN yarn install
-  
+
+# Install esptool
+RUN apt-get install python
+RUN curl -O https://bootstrap.pypa.io/get-pip.py
+RUN python get-pip.py
+RUN pip install esptool
+
 # Bundle app source
 COPY . .
 
