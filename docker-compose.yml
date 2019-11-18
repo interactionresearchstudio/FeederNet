@@ -9,6 +9,8 @@ services:
       - mongo
     ports:
       - "4000:4000"
+    devices:
+      - /dev/tty.usbserial-AI05DMZP:/dev/tty.usbserial-AI05DMZP
     restart: on-failure
   mongo:
     container_name: mongo
