@@ -13,7 +13,7 @@ function program(req, res) {
     port: '/dev/ttyUSB0',
     baud: 115200,
     files: {
-      0x00000: __dirname + '/app.bin'
+      0x00000: __dirname + '/blink.bin'
     }
   }, (err) => {
     if (err) {
