@@ -4,6 +4,7 @@ var esptool = require('esptool-wrapper');
 var request = require('request');
 var tmp = require('tmp');
 var fs = require('fs');
+var axios = require('axios');
 
 // API routes
 router.get('/program', getTags, sendBinary);
