@@ -6,7 +6,7 @@ var tmp = require('tmp');
 var fs = require('fs');
 
 // API routes
-router.get('/program', getTags, saveBinary);
+router.get('/program', getTags, sendBinary);
 
 // Get available tags from GitHub repository.
 function getTags(req, res, next) {
