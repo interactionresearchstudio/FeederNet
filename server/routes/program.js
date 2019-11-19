@@ -19,8 +19,10 @@ function program(req, res) {
     if (err) {
       console.log("ERROR!!!");
       console.log(err);
+      res.json({'ERROR': err});
     }
     console.log("Programming successful.");
+    res.json({'SUCCESS': "Programming successful."});
   });
 }
 
