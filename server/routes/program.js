@@ -6,7 +6,7 @@ const tmp = require('tmp');
 const fs = require('fs');
 const axios = require('axios');
 const SerialPort = require('serialport');
-const port = new SerialPort('/dev/ttyUSB0', {autoOpen=false, baudRate=115200});
+const port = new SerialPort('/dev/ttyUSB0', {autoOpen: false, baudRate: 115200});
 
 // API routes
 router.post('/program', getTags, sendBinary);
