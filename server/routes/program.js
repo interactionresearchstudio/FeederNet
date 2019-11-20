@@ -6,7 +6,9 @@ const tmp = require('tmp');
 const fs = require('fs');
 const axios = require('axios');
 const SerialPort = require('serialport');
+const Readline = require('@serialport/parser-readline');
 const port = new SerialPort('/dev/ttyUSB0', {autoOpen: false, baudRate: 115200});
+const parser = new Readline();
 
 // API routes
 router.post('/program', getTags, sendBinary);
@@ -59,25 +61,27 @@ function configureDevice(req, res) {
       console.log(err);
       res.sendStatus(500);
     }
-    port.on('data', (data) => {
+    port.pipe(parser);
+    console.log("INFO: Serial port opened.");
+    parser.on('data', (data) => {
       console.log(data);
-      if (data.includes('\r\n')) {
-        port.write('W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r', (_err) => {
-          if (_err) {
-            console.log("ERROR: Could not write to serial port.");
-            console.log(_err);
+      port.write('W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r', (_err) => {
+        console.log('INFO: Wrote ' + 'W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r' + ' to serial port.');
+        if (_err) {
+          console.log("ERROR: Could not write to serial port.");
+          console.log(_err);
+          res.sendStatus(500);
+        }
+        port.close((__err) => {
+          console.log("INFO: Closed serial port.");
+          if (__err) {
+            console.log("ERROR: Could not close serial port.");
+            console.log(__err);
             res.sendStatus(500);
           }
-          port.close((__err) => {
-            if (__err) {
-              console.log("ERROR: Could not close serial port.");
-              console.log(__err);
-              res.sendStatus(500);
-            }
-            res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
-          });
+          res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
         });
-      }
+      });
     });
   });
 }
