@@ -64,23 +64,25 @@ function configureDevice(req, res) {
     console.log("INFO: Serial port opened.");
     parser.on('ready', () => {
       console.log("INFO: Received ready sequence.");
-      port.write('W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r', (_err) => {
-        console.log('INFO: Wrote ' + 'W' + process.env.WIFI_NAME + '|' + process.env.WIFI_PASS  + ' to serial port.');
-        if (_err) {
-          console.log("ERROR: Could not write to serial port.");
-          console.log(_err);
-          res.sendStatus(500);
-        }
-        port.close((__err) => {
-          console.log("INFO: Closed serial port.");
-          if (__err) {
-            console.log("ERROR: Could not close serial port.");
-            console.log(__err);
+      setTimeout(() => {
+        port.write('W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r', (_err) => {
+          console.log('INFO: Wrote ' + 'W' + process.env.WIFI_NAME + '|' + process.env.WIFI_PASS  + ' to serial port.');
+          if (_err) {
+            console.log("ERROR: Could not write to serial port.");
+            console.log(_err);
             res.sendStatus(500);
           }
-          res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
+          port.close((__err) => {
+            console.log("INFO: Closed serial port.");
+            if (__err) {
+              console.log("ERROR: Could not close serial port.");
+              console.log(__err);
+              res.sendStatus(500);
+            }
+            res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
+          });
         });
-      });
+      }, 2000);
     });
   });
 }
