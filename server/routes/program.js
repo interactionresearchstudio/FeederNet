@@ -1,13 +1,16 @@
-var express = require('express');
-var router = express.Router();
-var esptool = require('esptool-wrapper');
-var request = require('request');
-var tmp = require('tmp');
-var fs = require('fs');
-var axios = require('axios');
+const express = require('express');
+const router = express.Router();
+const esptool = require('esptool-wrapper');
+const request = require('request');
+const tmp = require('tmp');
+const fs = require('fs');
+const axios = require('axios');
+const SerialPort = require('serialport');
+const port = new SerialPort('/dev/ttyUSB0', {autoOpen=false, baudRate=115200});
 
 // API routes
-router.get('/program', getTags, sendBinary);
+router.post('/program', getTags, sendBinary);
+router.post('/configure', configureDevice);
 
 // Get available tags from GitHub repository.
 function getTags(req, res, next) {
@@ -44,6 +47,37 @@ function sendBinary(req, res, next) {
         }
         res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
       });
+    });
+  });
+}
+
+// Configure device with WiFi credentials
+function configureDevice(req, res) {
+  port.open((err) => {
+    if (err) {
+      console.log("ERROR: Could not open serial port.");
+      console.log(err);
+      res.sendStatus(500);
+    }
+    port.on('data', (data) => {
+      console.log(data);
+      if (data.includes('\r\n')) {
+        port.write('W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r', (_err) => {
+          if (_err) {
+            console.log("ERROR: Could not write to serial port.");
+            console.log(_err);
+            res.sendStatus(500);
+          }
+          port.close((__err) => {
+            if (__err) {
+              console.log("ERROR: Could not close serial port.");
+              console.log(__err);
+              res.sendStatus(500);
+            }
+            res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
+          });
+        });
+      }
     });
   });
 }
