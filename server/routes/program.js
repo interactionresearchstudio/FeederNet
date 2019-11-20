@@ -60,7 +60,7 @@ function configureDevice(req, res) {
       console.log(err);
       res.sendStatus(500);
     }
-    const parser = port.pipe(new Ready());
+    const parser = port.pipe(new Ready({ delimiter: 'ready' }));
     console.log("INFO: Serial port opened.");
     parser.on('ready', () => {
       console.log("INFO: Received ready sequence.");
