@@ -65,7 +65,7 @@ function configureDevice(req, res) {
     parser.on('ready', () => {
       console.log("INFO: Received ready sequence.");
       port.write('W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r', (_err) => {
-        console.log('INFO: Wrote ' + 'W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r' + ' to serial port.');
+        console.log('INFO: Wrote ' + 'W' + process.env.WIFI_NAME + '|' + process.env.WIFI_PASS  + ' to serial port.');
         if (_err) {
           console.log("ERROR: Could not write to serial port.");
           console.log(_err);
