@@ -6,9 +6,8 @@ const tmp = require('tmp');
 const fs = require('fs');
 const axios = require('axios');
 const SerialPort = require('serialport');
-const Readline = require('@serialport/parser-readline');
+const Ready = require('@serialport/parser-ready');
 const port = new SerialPort('/dev/ttyUSB0', {autoOpen: false, baudRate: 115200});
-const parser = new Readline();
 
 // API routes
 router.post('/program', getTags, sendBinary);
@@ -61,10 +60,10 @@ function configureDevice(req, res) {
       console.log(err);
       res.sendStatus(500);
     }
-    port.pipe(parser);
+    const parser = port.pipe(new Ready());
     console.log("INFO: Serial port opened.");
-    parser.on('data', (data) => {
-      console.log(data);
+    parser.on('ready', () => {
+      console.log("INFO: Received ready sequence.");
       port.write('W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r', (_err) => {
         console.log('INFO: Wrote ' + 'W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r' + ' to serial port.');
         if (_err) {
