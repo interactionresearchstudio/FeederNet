@@ -14,7 +14,7 @@ const Feeder = require('../models/feeder');
 // API routes
 router.post('/program', getTags, sendBinary);
 router.post('/configure', configureDevice);
-router.post('/register', getDeviceMacAddress, addFeeder);
+router.post('/register', getDeviceMacAddress, isFeederRegistered, addFeeder);
 
 // Get available tags from GitHub repository.
 function getTags(req, res, next) {
@@ -142,8 +142,7 @@ function getDeviceMacAddress(req, res, next) {
 
 // Add new feeder
 function addFeeder(req, res) {
-  const isRegistered = isFeederRegistered(res.locals.macAddress);
-  if (isRegistered === false) {
+  if (res.locals.isFeederRegistered === false) {
     console.log("INFO: Feeder is not registered.");
     var newFeeder = new Feeder({
         stub: res.locals.macAddress,
@@ -157,30 +156,30 @@ function addFeeder(req, res) {
           res.json({'SUCCESS': newFeeder});
         }
     });
-  } else if (isRegistered === true) {
+  } else {
     console.log("INFO: Feeder is already registered.");
     res.status(304);
     res.json({'NOCHANGE': 'Feeder already registered.'});
-  } else if (isRegistered === null) {
-    res.status(500);
-    res.json({'ERROR': 'Error searching for feeder.'});
   }
 }
 
 // Get Feeder ID from stub
-function isFeederRegistered(stub) {
-  Feeder.findOne({stub: stub})
+function isFeederRegistered(req, res, next) {
+  Feeder.findOne({stub: res.locals.macAddress})
   .exec((err, feeder) => {
     if (err) {
+      console.log("ERROR: Error searching for feeder.");
       console.log(err);
-      return null;
+      res.status(500);
+      res.json({'ERROR': err});
     } else if (!feeder) {
-      console.log("INFO: Feeder stub " + stub + " not found.");
-      return false;
+      console.log("INFO: Feeder stub " + res.locals.macAddress + " not found.");
+      res.locals.isFeederRegistered = false;
     } else {
       console.log("INFO: Found feeder in DB.");
-      return true;
+      res.locals.isFeederRegistered = true;
     }
+    next();
   });
 }
 
