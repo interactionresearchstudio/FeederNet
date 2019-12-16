@@ -104,6 +104,7 @@ app.get('/admin/*', (req,res) =>{
 var server = http.createServer(app);
 server.listen(port, () => {
     console.log('INFO: Server started on port ' + port);
+    console.log('WiFi name: ' + process.env.WIFI_NAME + ' | WiFi pass: ' + process.env.WIFI_PASS);
 });
 
 module.exports = app;
