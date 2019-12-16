@@ -134,7 +134,6 @@ function getDeviceMacAddress(req, res, next) {
           }
           console.log("INFO: Closed serial port.");
           next();
-
         });
       }
     });
@@ -145,6 +144,7 @@ function getDeviceMacAddress(req, res, next) {
 function addFeeder(req, res) {
   const isRegistered = isFeederRegistered(res.locals.macAddress);
   if (isRegistered === false) {
+    console.log("INFO: Feeder is not registered.");
     var newFeeder = new Feeder({
         stub: res.locals.macAddress,
         name: res.locals.macAddress
@@ -158,6 +158,7 @@ function addFeeder(req, res) {
         }
     });
   } else if (isRegistered === true) {
+    console.log("INFO: Feeder is already registered.");
     res.status(304);
     res.json({'NOCHANGE': 'Feeder already registered.'});
   } else if (isRegistered === null) {
@@ -174,7 +175,7 @@ function isFeederRegistered(stub) {
       console.log(err);
       return null;
     } else if (!feeder) {
-      console.log("INFO: Feeder stub " + req.body.stub + " not found.");
+      console.log("INFO: Feeder stub " + stub + " not found.");
       return false;
     } else {
       console.log("INFO: Found feeder in DB.");
