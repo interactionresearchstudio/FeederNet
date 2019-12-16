@@ -6,8 +6,6 @@ WORKDIR /usr/src/app
 # Environment variables
 ENV MONGODB_URI mongodb://mongo:27017/feedernet
 ENV PORT 4000
-ENV WIFI_NAME feedernet
-ENV WIFI_PASS badgersandfoxes
 
 # Install esptool
 RUN apt-get install python
