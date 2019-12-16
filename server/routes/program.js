@@ -124,7 +124,17 @@ function getDeviceMacAddress(req, res, next) {
       if (macAddress != null) {
         console.log("INFO: Mac address " + macAddress[0] + " received.");
         res.locals.macAddress = macAddress[0];
-        next();
+        port.close((_err) => {
+          if (_err) {
+            console.log("ERROR: Could not close serial port.");
+            console.log(__err);
+            res.status(500);
+            res.json({'ERROR': err});
+          }
+          console.log("INFO: Closed serial port.");
+          next();
+
+        });
       }
     });
   });
