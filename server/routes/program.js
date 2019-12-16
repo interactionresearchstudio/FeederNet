@@ -7,11 +7,13 @@ const fs = require('fs');
 const axios = require('axios');
 const SerialPort = require('serialport');
 const Ready = require('@serialport/parser-ready');
+const ReadLine = require('@serialport/parser-readline');
 const port = new SerialPort('/dev/ttyUSB0', {autoOpen: false, baudRate: 115200});
 
 // API routes
 router.post('/program', getTags, sendBinary);
 router.post('/configure', configureDevice);
+router.post('/register', getDeviceMacAddress, addFeeder);
 
 // Get available tags from GitHub repository.
 function getTags(req, res, next) {
@@ -104,6 +106,75 @@ function program(path, port, callback) {
     console.log("INFO: Programming successful.");
     callback();
   });
+}
+
+// Register device with database
+function getDeviceMacAddress(req, res, next) {
+  port.open((err) => {
+    if (err) {
+      console.log("ERROR: Could not open serial port.");
+      console.log(err);
+      res.sendStatus(500);
+    }
+    console.log("INFO: Device registration - Waiting for MAC address from device...");
+    const parser = port.pipe(new ReadLine({delimiter: '\r\n'}));
+    parser.on('data', (data) => {
+      console.log("INFO: Data received from port: " + data);
+      const macAddress = getMacFromString(data);
+      if (macAddress != null) {
+        console.log("INFO: Mac address " + macAddress[0] + " received.");
+        res.locals.macAddress = macAddress[0];
+        next();
+      }
+    });
+  });
+}
+
+// Add new feeder
+function addFeeder(req, res) {
+  const isRegistered = isFeederRegistered(res.locals.macAddress);
+  if (isRegistered === false) {
+    var newFeeder = new Feeder({
+        stub: res.locals.macAddress,
+        name: res.locals.macAddress
+    });
+    newFeeder.save((err) => {
+        if (err) {
+          res.status(500);
+          res.json({'ERROR': err});
+        } else {
+          res.json({'SUCCESS': newFeeder});
+        }
+    });
+  } else if (isRegistered === true) {
+    res.status(304);
+    res.json({'NOCHANGE': 'Feeder already registered.'});
+  } else if (isRegistered === null) {
+    res.status(500);
+    res.json({'ERROR': 'Error searching for feeder.'});
+  }
+}
+
+// Get Feeder ID from stub
+function isFeederRegistered(stub) {
+  Feeder.findOne({stub: stub})
+  .exec((err, feeder) => {
+    if (err) {
+      console.log(err);
+      return null;
+    } else if (!feeder) {
+      console.log("INFO: Feeder stub " + req.body.stub + " not found.");
+      return false;
+    } else {
+      console.log("INFO: Found feeder in DB.");
+      return true;
+    }
+  });
+}
+
+function getMacFromString(s) {
+  const rx = /((?:(\d{1,2}|[a-fA-F]{1,2}){2})(?::|-*)){6}/;
+  return rx.exec(s);
 }
 
 module.exports = router;
