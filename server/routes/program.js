@@ -9,6 +9,7 @@ const SerialPort = require('serialport');
 const Ready = require('@serialport/parser-ready');
 const ReadLine = require('@serialport/parser-readline');
 const port = new SerialPort('/dev/ttyUSB0', {autoOpen: false, baudRate: 115200});
+const Feeder = require('../models/feeder');
 
 // API routes
 router.post('/program', getTags, sendBinary);
