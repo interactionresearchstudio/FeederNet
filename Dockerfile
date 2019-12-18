@@ -1,3 +1,13 @@
+# Build
+FROM arm32v7/node:11.0.0 as build
+WORKDIR /admin-client
+COPY admin-client/package.json /admin-client/package.json
+RUN npm install --silent
+RUN npm install react-scripts -g --silent
+COPY admin-client /admin-client
+RUN npm run build
+
+# Production
 FROM arm32v7/node:11.0.0
 
 # Create app directory
@@ -23,6 +33,7 @@ RUN yarn install
 
 # Bundle app source
 COPY . .
+COPY --from=build /admin-client/build ./admin-client/build
 
 EXPOSE 4000
 

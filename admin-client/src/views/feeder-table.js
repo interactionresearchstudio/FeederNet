@@ -6,6 +6,10 @@ class FeederTable extends Component {
   // Build table rows
   buildRows() {
     return this.props.feeders.map((object, i) => {
+      if (object.location == null) {
+        object.location.latitude = "Undefined";
+        object.location.longitude = "Undefined";
+      }
       return(
         <tr key={i}>
           <td>{object.name}</td>
