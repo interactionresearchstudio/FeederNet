@@ -33,7 +33,7 @@ RUN yarn install
 
 # Bundle app source
 COPY . .
-COPY --from=build /admin-client/build ./admin-client/build
+COPY --from=build /admin-client/build usr/src/app/admin-client/build
 
 EXPOSE 4000
 
