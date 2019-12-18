@@ -6,6 +6,7 @@ import Birds from './birds';
 import Feeders from './feeders';
 import EventTable from './event-table';
 import WaypointTable from './waypoint-table';
+import Configure from './configure';
 
 class Index extends Component {
   constructor(props, context) {
@@ -75,6 +76,9 @@ class Index extends Component {
               locationFilter={this.state.locationFilter}
               perPage={100}
             />
+          </Tab>
+          <Tab eventKey={5} title="Configure">
+            <Configure/>
           </Tab>
         </Tabs>
       </div>

@@ -27,7 +27,8 @@ function getTags(req, res, next) {
   .catch(error => {
     console.log("ERROR: Could not retrieve tags from firmware repo.");
     console.log(error);
-    res.sendStatus(500);
+    res.status(500);
+    res.json({'ERROR': error});
   });
 }
 
@@ -37,7 +38,8 @@ function sendBinary(req, res, next) {
   tmp.file((err, path, fd) => {
     if (err) {
       console.log("ERROR: Could not create temporary file for binary.");
-      re.sendStatus(500);
+      res.status(500);
+      res.json({'ERROR': err});
     }
     console.log("File path: " + path);
     res.locals.binaryPath = path;
@@ -47,6 +49,7 @@ function sendBinary(req, res, next) {
         if (err) {
           console.log("ERROR: esptool error.");
           console.log(err);
+          res.status(500);
           res.json({'ERROR': err});
         }
         res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
@@ -61,32 +64,36 @@ function configureDevice(req, res) {
     if (err) {
       console.log("ERROR: Could not open serial port.");
       console.log(err);
-      res.sendStatus(500);
+      res.status(500).json({'ERROR': err});
     }
-    const parser = port.pipe(new Ready({ delimiter: 'ready' }));
-    console.log("INFO: Serial port opened.");
-    parser.on('ready', () => {
-      console.log("INFO: Received ready sequence.");
-      setTimeout(() => {
-        port.write('W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r', (_err) => {
-          console.log('INFO: Wrote ' + 'W' + process.env.WIFI_NAME + '|' + process.env.WIFI_PASS  + ' to serial port.');
-          if (_err) {
-            console.log("ERROR: Could not write to serial port.");
-            console.log(_err);
-            res.sendStatus(500);
-          }
-          port.close((__err) => {
-            console.log("INFO: Closed serial port.");
-            if (__err) {
-              console.log("ERROR: Could not close serial port.");
-              console.log(__err);
-              res.sendStatus(500);
+    else {
+      const parser = port.pipe(new Ready({ delimiter: 'ready' }));
+      console.log("INFO: Serial port opened.");
+      parser.on('ready', () => {
+        console.log("INFO: Received ready sequence.");
+        setTimeout(() => {
+          port.write('W' + process.env.WIFI_NAME + '\r' + process.env.WIFI_PASS + '\r', (_err) => {
+            console.log('INFO: Wrote ' + 'W' + process.env.WIFI_NAME + '|' + process.env.WIFI_PASS  + ' to serial port.');
+            if (_err) {
+              console.log("ERROR: Could not write to serial port.");
+              console.log(_err);
+              res.status(500);
+              res.json({'ERROR': _err});
             }
-            res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
+            port.close((__err) => {
+              console.log("INFO: Closed serial port.");
+              if (__err) {
+                console.log("ERROR: Could not close serial port.");
+                console.log(__err);
+                res.status(500);
+                res.json({'ERROR': __err});
+              }
+              res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
+            });
           });
-        });
-      }, 2000);
-    });
+        }, 2000);
+      });
+    }
   });
 }
 
@@ -115,7 +122,8 @@ function getDeviceMacAddress(req, res, next) {
     if (err) {
       console.log("ERROR: Could not open serial port.");
       console.log(err);
-      res.sendStatus(500);
+      res.status(500);
+      res.json({'ERROR': err});
     }
     console.log("INFO: Device registration - Waiting for MAC address from device...");
     const parser = port.pipe(new ReadLine({delimiter: '\r\n'}));
