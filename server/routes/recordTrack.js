@@ -6,7 +6,7 @@ var Feeder = require('../models/feeder');
 var Event = require('../models/event');
 
 // API routes
-router.post('/recordTrack', getBirdId, getFeederId, addWaypoint, addEvent);
+router.post('/recordTrack', getBirdId, getFeederId, addWaypoint, updateLastReportedRssi, addEvent);
 
 // Get bird ID from RFID.
 function getBirdId(req, res, next) {
@@ -103,6 +103,21 @@ function addEvent(req, res) {
           });
         }
     });
+}
+
+// Update last reported RSSI
+function updateLastReportedRssi(req, res, next) {
+  Feeder.findById(res.locals.feeder_id, (err, feeder) => {
+    feeder.lastReportedRssi = req.body.rssi;
+    feeder.save((err) => {
+      if (err) {
+        res.json({'ERROR': err});
+      } else {
+        console.log("INFO: Updated feeder RSSI to " + req.body.rssi);
+        next();
+      }
+    });
+  });
 }
 
 module.exports = router;
