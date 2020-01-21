@@ -77,7 +77,7 @@ class Index extends Component {
               perPage={100}
             />
           </Tab>
-          <Tab eventKey={5} title="Configure">
+          <Tab eventKey={5} title="Register feeders">
             <Configure/>
           </Tab>
         </Tabs>
