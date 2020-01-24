@@ -38,8 +38,17 @@ class Configure extends Component {
         instructionText: "Programming feeder...",
         registrationState: "programming",
         isButtonDisabled: true
+      }, () => {
+        this.beginProgramming();
       });
-      this.beginSetup();
+    } else if (this.state.registrationState === "config") {
+      this.setState({
+        instructionText: "Configuring feeder...",
+        registrationState: "configuring",
+        isButtonDisabled: true
+      }, () => {
+        this.beginConfiguring();
+      });
     } else if (this.state.registrationState === "complete" || this.state.registrationState === "err") {
       // Let's start from prog again.
       this.setState({
@@ -50,46 +59,53 @@ class Configure extends Component {
     }
   }
 
-  beginSetup() {
+  beginProgramming() {
     // Program
     axios.post('/api/program')
       .then(res => {
         console.log(res);
-        this.setState({ instructionText: "Configuring feeder..." }, () => {
-          // Configure
-          axios.post('/api/configure')
-            .then(_res => {
-              console.log(_res);
-              this.setState({ instructionText: "Registering feeder..."}, () => {
-                // Register
-                axios.post('/api/register')
-                  .then(__res => {
-                    console.log(__res);
-                    this.setState({
-                      instructionText: "Success! Feeder registered successfuly.",
-                      registrationState: "complete",
-                      isButtonDisabled: false,
-                      buttonText: "Register Another Feeder"
-                    });
-                  })
-                  .catch((__err) => {
-                    console.error("ERROR: Register failed.");
-                    console.error(__err);
-                    this.displayError("Error: Failed to register device. Please try again.");
-                  });
-              });
-            })
-            .catch((_err) => {
-              console.log("ERROR: Configure failed.");
-              console.log(_err);
-              this.displayError("Error: Failed to configure device. Please try again. ");
-            });
+        this.setState({
+          instructionText: "Press and release the RESET button. Click Next when ready.",
+          registrationState: "config",
+          buttonText: "Next",
+          isButtonDisabled: false
         });
       })
       .catch((err) => {
         console.log("ERROR: Programming failed.");
         console.log(err);
-        this.displayError("Error: Failed to configure device. Please try again");
+        this.displayError("Error: Failed to configure device. Please check that the feeder is connected to the Raspberry Pi and try again.");
+      });
+  }
+
+  beginConfiguring() {
+    // Configure
+    axios.post('/api/configure')
+      .then(_res => {
+        console.log(_res);
+        this.setState({ instructionText: "Registering feeder..."}, () => {
+          // Register
+          axios.post('/api/register')
+            .then(__res => {
+              console.log(__res);
+              this.setState({
+                instructionText: "Success! Feeder registered successfuly.",
+                registrationState: "complete",
+                isButtonDisabled: false,
+                buttonText: "Register Another Feeder"
+              });
+            })
+            .catch((__err) => {
+              console.error("ERROR: Register failed.");
+              console.error(__err);
+              this.displayError("Error: Failed to register device. Please try again.");
+            });
+        });
+      })
+      .catch((_err) => {
+        console.log("ERROR: Configure failed.");
+        console.log(_err);
+        this.displayError("Error: Failed to configure device. Please try again. ");
       });
   }
 
