@@ -28,7 +28,7 @@ class Configure extends Component {
     if (this.state.registrationState === "idle") {
       // Show user how to put device into programming mode
       this.setState({
-        instructionText: "Whilst holding down the prog0 button, press and release the RESET button.",
+        instructionText: "Whilst holding down the GPIO0 button, press and release the RESET button. Then, release the GPIO0 button. When you're ready, click Next.",
         buttonText: "Next",
         registrationState: "prog"
       });
@@ -73,26 +73,29 @@ class Configure extends Component {
                     });
                   })
                   .catch((__err) => {
-                    console.log(__err);
-                    this.displayError(__err);
+                    console.error("ERROR: Register failed.");
+                    console.error(__err);
+                    this.displayError("Error: Failed to register device. Please try again.");
                   });
               });
             })
             .catch((_err) => {
+              console.log("ERROR: Configure failed.");
               console.log(_err);
-              this.displayError(_err);
+              this.displayError("Error: Failed to configure device. Please try again. ");
             });
         });
       })
       .catch((err) => {
+        console.log("ERROR: Programming failed.");
         console.log(err);
-        this.displayError(err);
+        this.displayError("Error: Failed to configure device. Please try again");
       });
   }
 
   displayError(err) {
     this.setState({
-      instructionText: "ERROR: " + err,
+      instructionText: err,
       registrationState: "err",
       isButtonDisabled: false,
       buttonText: "Retry"
@@ -102,6 +105,7 @@ class Configure extends Component {
   render() {
     return (
       <>
+        <br/>
         <p>{this.state.instructionText}</p>
         <Button
           variant="primary"

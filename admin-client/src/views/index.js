@@ -20,6 +20,9 @@ class Index extends Component {
         console.log("INFO: CAUGHT 401");
         this.setState({redirect: true});
       }
+      else {
+        return Promise.reject(error);
+      }
     });
 
     this.handleSelect = this.handleSelect.bind(this);

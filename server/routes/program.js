@@ -27,8 +27,7 @@ function getTags(req, res, next) {
   .catch(error => {
     console.log("ERROR: Could not retrieve tags from firmware repo.");
     console.log(error);
-    res.status(500);
-    res.json({'ERROR': error});
+    res.status(500).json({'ERROR': error});
   });
 }
 
@@ -38,8 +37,7 @@ function sendBinary(req, res, next) {
   tmp.file((err, path, fd) => {
     if (err) {
       console.log("ERROR: Could not create temporary file for binary.");
-      res.status(500);
-      res.json({'ERROR': err});
+      res.status(500).json({'ERROR': err});
     }
     console.log("File path: " + path);
     res.locals.binaryPath = path;
@@ -49,10 +47,10 @@ function sendBinary(req, res, next) {
         if (err) {
           console.log("ERROR: esptool error.");
           console.log(err);
-          res.status(500);
-          res.json({'ERROR': err});
+          res.status(500).json({'ERROR': err});
+        } else {
+          res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
         }
-        res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
       });
     });
   });
@@ -77,16 +75,14 @@ function configureDevice(req, res) {
             if (_err) {
               console.log("ERROR: Could not write to serial port.");
               console.log(_err);
-              res.status(500);
-              res.json({'ERROR': _err});
+              res.status(500).json({'ERROR': _err});
             }
             port.close((__err) => {
               console.log("INFO: Closed serial port.");
               if (__err) {
                 console.log("ERROR: Could not close serial port.");
                 console.log(__err);
-                res.status(500);
-                res.json({'ERROR': __err});
+                res.status(500).json({'ERROR': __err});
               }
               res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
             });
@@ -109,10 +105,12 @@ function program(path, port, callback) {
     }
   }, (err) => {
     if (err) {
+      console.log("ERROR: Error programming device.");
       callback(err);
+    } else {
+      console.log("INFO: Programming successful.");
+      callback();
     }
-    console.log("INFO: Programming successful.");
-    callback();
   });
 }
 
@@ -122,8 +120,7 @@ function getDeviceMacAddress(req, res, next) {
     if (err) {
       console.log("ERROR: Could not open serial port.");
       console.log(err);
-      res.status(500);
-      res.json({'ERROR': err});
+      res.status(500).json({'ERROR': err});
     }
     console.log("INFO: Device registration - Waiting for MAC address from device...");
     const parser = port.pipe(new ReadLine({delimiter: '\r\n'}));
@@ -137,8 +134,7 @@ function getDeviceMacAddress(req, res, next) {
           if (_err) {
             console.log("ERROR: Could not close serial port.");
             console.log(__err);
-            res.status(500);
-            res.json({'ERROR': err});
+            res.status(500).json({'ERROR': err});
           }
           console.log("INFO: Closed serial port.");
           next();
@@ -158,16 +154,14 @@ function addFeeder(req, res) {
     });
     newFeeder.save((err) => {
         if (err) {
-          res.status(500);
-          res.json({'ERROR': err});
+          res.status(500).json({'ERROR': err});
         } else {
           res.json({'SUCCESS': newFeeder});
         }
     });
   } else {
     console.log("INFO: Feeder is already registered.");
-    res.status(304);
-    res.json({'NOCHANGE': 'Feeder already registered.'});
+    res.status(304).json({'NOCHANGE': 'Feeder already registered.'});
   }
 }
 
@@ -178,8 +172,7 @@ function isFeederRegistered(req, res, next) {
     if (err) {
       console.log("ERROR: Error searching for feeder.");
       console.log(err);
-      res.status(500);
-      res.json({'ERROR': err});
+      res.status(500).json({'ERROR': err});
     } else if (!feeder) {
       console.log("INFO: Feeder stub " + res.locals.macAddress + " not found.");
       res.locals.isFeederRegistered = false;
