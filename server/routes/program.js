@@ -59,7 +59,7 @@ function sendBinary(req, res, next) {
 
 // Send local binary file to esptool.
 function sendBinaryFromFile(req, res) {
-  program('RFIDBirdFeeder.ino.bin', '/dev/ttyUSB0', (err) => {
+  program(__dirname + '/RFIDBirdFeeder.ino.bin', '/dev/ttyUSB0', (err) => {
     if (err) {
       console.log("ERROR: esptool error.");
       console.log(err);
