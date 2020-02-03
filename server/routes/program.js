@@ -164,7 +164,11 @@ function addFeeder(req, res) {
     console.log("INFO: Feeder is not registered.");
     var newFeeder = new Feeder({
         stub: res.locals.macAddress,
-        name: res.locals.macAddress
+        name: res.locals.macAddress,
+        location: {
+            latitude: "51",
+            longitude: "-1"
+        }
     });
     newFeeder.save((err) => {
         if (err) {
