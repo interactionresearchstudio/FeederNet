@@ -12,7 +12,8 @@ const port = new SerialPort('/dev/ttyUSB0', {autoOpen: false, baudRate: 115200})
 const Feeder = require('../models/feeder');
 
 // API routes
-router.post('/program', getTags, sendBinary);
+//router.post('/program', getTags, sendBinary);
+router.post('/program', sendBinaryFromFile);
 router.post('/configure', configureDevice);
 router.post('/register', getDeviceMacAddress, isFeederRegistered, addFeeder);
 
@@ -53,6 +54,19 @@ function sendBinary(req, res, next) {
         }
       });
     });
+  });
+}
+
+// Send local binary file to esptool.
+function sendBinaryFromFile(req, res) {
+  program('./firmware.bin', '/dev/ttyUSB0', (err) => {
+    if (err) {
+      console.log("ERROR: esptool error.");
+      console.log(err);
+      res.status(500).json({'ERROR': err});
+    } else {
+      res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
+    }
   });
 }
 
