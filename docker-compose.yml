@@ -8,10 +8,12 @@ services:
     links:
       - mongo
     ports:
-      - "4000:4000"
-    devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
+      - "80:4000"
+    privileged: true
     restart: on-failure
+    environment:
+      - WIFI_NAME=feedernet
+      - WIFI_PASS=badgersandfoxes
   mongo:
     container_name: mongo
     image: andresvidal/rpi3-mongodb3

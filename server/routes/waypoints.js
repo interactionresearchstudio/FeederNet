@@ -5,6 +5,7 @@ var auth = require('./auth');
 
 // API routes
 router.get('/waypoints', auth.isLoggedIn, findAllWaypoints);
+router.get('/waypoints/csv', getCsvWaypoints);
 router.get('/waypoints/:offset/:limit', auth.isLoggedIn, findPaginatedWaypoints);
 router.get('/waypoint/:id', auth.isLoggedIn, findWaypointById);
 router.post('/waypoints', auth.isLoggedIn, addWaypoint);
@@ -22,6 +23,33 @@ function findAllWaypoints(req, res) {
             res.json(waypoints);
         }
     });
+}
+
+function getCsvWaypoints(req, res) {
+  Waypoint.find()
+  .populate('bird')
+  .populate('feeder')
+  .exec((err, waypoints) => {
+      if (err) {
+          res.status(500).json({'ERROR': err});
+      } else {
+          let csv = "Bird Name,RFID,Feeder Name,Date And Time\r\n";
+          waypoints.map((object, i) => {
+            if (object.bird == null) {
+              object.bird = {name: "Deleted", rfid: "Deleted"};
+            }
+            if (object.feeder == null) {
+              object.feeder = {name: "Deleted", stub: "Deleted"};
+            }
+            csv +=
+              object.bird.name + "," +
+              object.bird.rfid + "," +
+              object.feeder.name + "," +
+              convertTime(object.datetime) + "\r\n";
+          });
+          res.send(csv);
+      }
+  });
 }
 
 // Get waypoints with page limit
@@ -90,6 +118,19 @@ function deleteWaypoint(req, res) {
             });
         }
     });
+}
+
+function convertTime(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+  return time;
 }
 
 module.exports = router;

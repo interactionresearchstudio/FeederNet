@@ -10,8 +10,12 @@ class Feeders extends Component {
       feeders: []
     };
 
+    this.feederFormElement = React.createRef();
+
     this.addFeeder = this.addFeeder.bind(this);
     this.deleteFeeder = this.deleteFeeder.bind(this);
+    this.updateFeeder = this.updateFeeder.bind(this);
+    this.editFeeder = this.editFeeder.bind(this);
   }
 
   componentDidMount() {
@@ -41,6 +45,17 @@ class Feeders extends Component {
       });
   }
 
+  editFeeder(itemId) {
+    axios.get('/api/feeder/' + itemId)
+    .then(response => {
+      this.feederFormElement.current.placeData(response.data);
+      window.scrollTo(0, 0)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   addFeeder(feederStub, feederName, feederLatitude, feederLongitude, callback) {
     const postData = {
       stub: feederStub,
@@ -63,17 +78,32 @@ class Feeders extends Component {
       });
   }
 
+  updateFeeder(itemId, putData, callback) {
+    console.log("Update item with ID " + itemId);
+    axios.put('/api/feeder/' + itemId, putData)
+    .then(res => {
+      this.getFeeders();
+      callback(null);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
   render() {
     return(
       <div>
         <br/>
         <FeederForm
+          ref = { this.feederFormElement }
           addFeeder = { this.addFeeder }
+          updateFeeder = { this.updateFeeder }
         />
         <br/>
         <FeederTable
           feeders = { this.state.feeders }
           deleteFeeder = { this.deleteFeeder }
+          updateFeeder = { this.editFeeder }
           locationFilter = {this.props.locationFilter}
         />
       </div>

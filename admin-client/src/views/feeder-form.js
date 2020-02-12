@@ -10,30 +10,72 @@ class FeederForm extends Component {
     this.handleLatitudeChange = this.handleLatitudeChange.bind(this);
     this.handleLongitudeChange = this.handleLongitudeChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
 
     this.state = {
       feederName: '',
       feederStub: '',
       feederLatitude: '',
-      feederLongitude: ''
+      feederLongitude: '',
+      feederId: '',
+      updating: false
     };
+  }
+
+  placeData(feederData) {
+    console.log(feederData);
+    this.setState({
+      feederName: feederData.name,
+      feederStub: feederData.stub,
+      feederLatitude: feederData.location.latitude,
+      feederLongitude: feederData.location.longitude,
+      feederId: feederData._id,
+      updating: true
+    });
   }
 
   // Handle form changes
   handleNameChange(e) {
     this.setState({
-      feederName: e.target.value,
-      feederStub: e.target.value.replace(/\s/g,'')
+      feederName: e.target.value
     });
   }
   handleStubChange(e) {
     this.setState({ feederStub: e.target.value });
   }
   handleLatitudeChange(e) {
+    console.log("Change latitude");
     this.setState({ feederLatitude: e.target.value} );
   }
   handleLongitudeChange(e) {
     this.setState({ feederLongitude: e.target.value} );
+  }
+
+  handleUpdate(e) {
+    e.preventDefault();
+
+    this.props.updateFeeder(
+      this.state.feederId,
+      {
+        stub: this.state.feederStub,
+        name: this.state.feederName,
+        location: {
+          latitude: this.state.feederLatitude,
+          longitude: this.state.feederLongitude,
+        }
+      }, (error) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+        this.setState({
+          feederName: '',
+          feederStub: '',
+          feederLatitude: '',
+          feederLongitude: '',
+          updating: false
+        });
+      });
   }
 
   // Handle submit
@@ -54,10 +96,25 @@ class FeederForm extends Component {
           feederName: '',
           feederStub: '',
           feederLatitude: '',
-          feederLongitude: ''
+          feederLongitude: '',
+          update: false
         });
       });
   }
+
+  renderButton() {
+    if(this.state.updating) {
+      return(
+        <Button type="submit" onClick={this.handleUpdate}>Update Feeder</Button>
+      );
+    }
+    else {
+      return(
+        <Button type="submit" onClick={this.handleSubmit}>Add New Feeder</Button>
+      );
+    }
+  }
+
 
   render() {
     return(
@@ -111,7 +168,7 @@ class FeederForm extends Component {
           </Col>
         </Row>
         <div className="form-row">
-          <Button type="submit" onClick={this.handleSubmit}>Add New Feeder</Button>
+          { this.renderButton() }
         </div>
       </form>
     );

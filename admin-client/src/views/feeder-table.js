@@ -27,6 +27,12 @@ class FeederTable extends Component {
               >
               <Glyphicon glyph="remove"/>
             </Button>
+            <Button
+              onClick={() => this.props.updateFeeder(object._id)}
+              bsSize="xsmall"
+              >
+              <Glyphicon glyph="pencil"/>
+            </Button>
           </td>
         </tr>
       );
