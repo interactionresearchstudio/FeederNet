@@ -99,6 +99,7 @@ function configureDevice(req, res) {
                 console.log(__err);
                 res.status(500).json({'ERROR': __err});
               }
+              parser.destroy();
               res.json({'SUCCESS': 'Device wifi settings configured successfully'});
             });
           });
@@ -152,6 +153,7 @@ function getDeviceMacAddress(req, res, next) {
             console.log(__err);
             res.status(500).json({'ERROR': err});
           }
+          parser.destroy();
           console.log("INFO: Closed serial port.");
           next();
         });
