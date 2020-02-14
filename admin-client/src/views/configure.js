@@ -41,20 +41,14 @@ class Configure extends Component {
       }, () => {
         this.beginProgramming();
       });
-    } else if (this.state.registrationState === "config") {
-      this.setState({
-        instructionText: "Configuring feeder...",
-        registrationState: "configuring",
-        isButtonDisabled: true
-      }, () => {
-        this.beginConfiguring();
-      });
     } else if (this.state.registrationState === "complete" || this.state.registrationState === "err") {
       // Let's start from prog again.
       this.setState({
         instructionText: "Whilst holding down the prog0 button, press and release the RESET button.",
         buttonText: "Next",
         registrationState: "prog"
+      }, () => {
+        this.beginConfiguring();
       });
     }
   }
@@ -65,10 +59,10 @@ class Configure extends Component {
       .then(res => {
         console.log(res);
         this.setState({
-          instructionText: "Press and release the RESET button. Click Next when ready.",
+          instructionText: "Please press the RESET button once.",
           registrationState: "config",
           buttonText: "Next",
-          isButtonDisabled: false
+          isButtonDisabled: true
         });
       })
       .catch((err) => {
