@@ -73,6 +73,7 @@ function sendBinaryFromFile(req, res) {
 // Configure device with WiFi credentials
 function configureDevice(req, res) {
   port.open((err) => {
+    port.flush();
     if (err) {
       console.log("ERROR: Could not open serial port.");
       console.log(err);
@@ -131,6 +132,7 @@ function program(path, port, callback) {
 // Register device with database
 function getDeviceMacAddress(req, res, next) {
   port.open((err) => {
+    port.flush();
     if (err) {
       console.log("ERROR: Could not open serial port.");
       console.log(err);
