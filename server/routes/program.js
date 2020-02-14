@@ -98,7 +98,7 @@ function configureDevice(req, res) {
                 console.log(__err);
                 res.status(500).json({'ERROR': __err});
               }
-              res.json({'SUCCESS': 'Program sent to esp8266 successfully'});
+              res.json({'SUCCESS': 'Device wifi settings configured successfully'});
             });
           });
         }, 2000);
@@ -179,7 +179,7 @@ function addFeeder(req, res) {
     });
   } else {
     console.log("INFO: Feeder is already registered.");
-    res.status(304).json({'NOCHANGE': 'Feeder already registered.'});
+    res.status(200).json({'NOCHANGE': 'Feeder already registered.'});
   }
 }
 
