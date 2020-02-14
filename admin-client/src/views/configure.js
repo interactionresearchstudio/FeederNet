@@ -47,8 +47,6 @@ class Configure extends Component {
         instructionText: "Whilst holding down the prog0 button, press and release the RESET button.",
         buttonText: "Next",
         registrationState: "prog"
-      }, () => {
-        this.beginConfiguring();
       });
     }
   }
@@ -59,10 +57,12 @@ class Configure extends Component {
       .then(res => {
         console.log(res);
         this.setState({
-          instructionText: "Please press the RESET button once.",
-          registrationState: "config",
+          instructionText: "Please press RESET button once.",
+          registrationState: "configuring",
           buttonText: "Next",
           isButtonDisabled: true
+        }, () => {
+          this.beginConfiguring();
         });
       })
       .catch((err) => {
