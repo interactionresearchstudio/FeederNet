@@ -7,6 +7,9 @@ class LoginForm extends Component {
   constructor(props, context) {
     super(props, context);
 
+    // Create new instance of axios to avoid interpreter conflicts
+    this.axiosInstance = axios.create();
+
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -35,7 +38,7 @@ class LoginForm extends Component {
       password: this.state.password
     }
 
-    axios.post('/api/login', postData)
+    this.axiosInstance.post('/api/login', postData)
       .then(res => {
         console.log(res);
         console.log("Login successful.");
@@ -44,7 +47,11 @@ class LoginForm extends Component {
       .catch((error) => {
         console.log("Authentication failed!");
         console.log(error);
-        this.setState({showAlert: true});
+        this.setState({
+          showAlert: true,
+          username: '',
+          password: ''
+        });
       });
   }
 
@@ -58,7 +65,7 @@ class LoginForm extends Component {
     if(this.state.showAlert) {
       return(
         <Alert bsStyle="danger">
-          Username / password not found.
+          Username / password not found. Please double-check your username / password and try again.
         </Alert>
       );
     }
