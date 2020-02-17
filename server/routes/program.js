@@ -166,9 +166,14 @@ function getDeviceMacAddress(req, res, next) {
 function addFeeder(req, res) {
   if (res.locals.isFeederRegistered === false) {
     console.log("INFO: Feeder is not registered.");
+    let feederName = res.locals.macAddress;
+    if (req.body.name) {
+      feederName = req.body.name;
+    }
+    const feederName = req.body
     var newFeeder = new Feeder({
         stub: res.locals.macAddress,
-        name: res.locals.macAddress,
+        name: feederName,
         location: {
             latitude: "51",
             longitude: "-1"

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
 import axios from 'axios';
 
 class Configure extends Component {
@@ -7,6 +7,8 @@ class Configure extends Component {
     super(props, context);
 
     this.handleButtonClick = this.handleButtonClick.bind(this);
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.renderFormInput = this.renderFormInput.bind(this);
 
     // States:
     // idle - waiting for user to start process
@@ -21,6 +23,7 @@ class Configure extends Component {
       instructionText: "Register a new feeder.",
       buttonText: "Start",
       isButtonDisabled: false,
+      feederName: null,
     };
   }
 
@@ -79,7 +82,13 @@ class Configure extends Component {
         console.log(_res);
         this.setState({ instructionText: "Registering feeder..."}, () => {
           // Register
-          axios.post('/api/register')
+          let postData;
+          if (this.state.feederName !== null) {
+            postData = {
+              feederName: this.state.feederName
+            };
+          }
+          axios.post('/api/register', postData)
             .then(__res => {
               console.log(__res);
               this.setState({
@@ -112,10 +121,36 @@ class Configure extends Component {
     });
   }
 
+  handleNameChange(e) {
+    this.setState({
+      feederName: e.target.value
+    });
+  }
+
+  renderFormInput() {
+    if (this.state.registrationState === "idle") {
+      return(
+        <FormGroup controlId="feederNameForm">
+          <ControlLabel>Feeder name</ControlLabel>
+          <FormControl
+            type="text"
+            value={this.state.feederName}
+            placeholder="Type new feeder name here"
+            onChange={this.handleNameChange}
+            />
+        </FormGroup>
+      );
+    }
+    else {
+      return null;
+    }
+  }
+
   render() {
     return (
       <>
         <br/>
+        {this.renderFormInput()}
         <p>{this.state.instructionText}</p>
         <Button
           variant="primary"
