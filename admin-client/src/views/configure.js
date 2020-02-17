@@ -23,7 +23,7 @@ class Configure extends Component {
       instructionText: "Register a new feeder.",
       buttonText: "Start",
       isButtonDisabled: false,
-      feederName: null,
+      feederName: "",
     };
   }
 
@@ -83,7 +83,7 @@ class Configure extends Component {
         this.setState({ instructionText: "Registering feeder..."}, () => {
           // Register
           let postData;
-          if (this.state.feederName !== null) {
+          if (this.state.feederName !== "") {
             postData = {
               feederName: this.state.feederName
             };
