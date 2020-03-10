@@ -1,6 +1,22 @@
 import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Button, Col, Row} from 'react-bootstrap';
 import axios from 'axios';
+import image_connections from '../images/Programming_Diagram_1500_1500_01.jpg';
+import image_prog from '../images/programming-mode.gif';
+import image_reset from '../images/Programming_Diagram_1500_1500_10.jpg';
+import image_name from '../images/Programming_Diagram_1500_1500_08.jpg';
+import image_programming from '../images/Programming_Diagram_1500_1500_13.jpg';
+import image_registering from '../images/Programming_Diagram_1500_1500_14.jpg';
+import image_complete from '../images/Programming_Diagram_1500_1500_15.jpg';
+import image_error from '../images/Programming_Diagram_1500_1500_16.jpg';
+
+const text_idle = "To register a feeder, make sure your feeder is plugged in as pictured. When ready, click Start.";
+const text_name = "Please type a name for your feeder. Make sure it's a unique name. You can change it later.";
+const text_prog = "Whilst holding down the GPIO0 button, press and release the RESET button. Then release the GPIO0 button. The red light on the circuit board should remain on.";
+const text_programming = "Programming board... Please do not unplug the feeder.";
+const text_reset = "Press and release the RESET button.";
+const text_configuring = "Configuring board...";
+const text_registering = "Registering board...";
 
 class Configure extends Component {
   constructor(props, context) {
@@ -12,6 +28,7 @@ class Configure extends Component {
 
     // States:
     // idle - waiting for user to start process
+    // name - waiting for user to give the freader a name
     // prog - waiting for user to put feeder in programming mode
     // programming - waiting for server to program device
     // configuring - waiting for server to configure device
@@ -20,7 +37,8 @@ class Configure extends Component {
 
     this.state = {
       registrationState: "idle",
-      instructionText: "Register a new feeder.",
+      instructionText: text_idle,
+      instructionImage: image_connections,
       buttonText: "Start",
       isButtonDisabled: false,
       feederName: "",
@@ -29,27 +47,37 @@ class Configure extends Component {
 
   handleButtonClick() {
     if (this.state.registrationState === "idle") {
+      this.setState({
+        instructionText: text_name,
+        buttonText: "Next",
+        registrationState: "name",
+        instructionImage: image_name
+      });
+    } else if (this.state.registrationState === "name") {
       // Show user how to put device into programming mode
       this.setState({
-        instructionText: "Whilst holding down the GPIO0 button, press and release the RESET button. Then, release the GPIO0 button. When you're ready, click Next.",
+        instructionText: text_prog,
         buttonText: "Next",
-        registrationState: "prog"
+        registrationState: "prog",
+        instructionImage: image_prog
       });
     } else if (this.state.registrationState === "prog") {
       // User has reset board. let's move onto programming.
       this.setState({
-        instructionText: "Programming feeder...",
+        instructionText: text_programming,
         registrationState: "programming",
-        isButtonDisabled: true
+        isButtonDisabled: true,
+        instructionImage: image_programming
       }, () => {
         this.beginProgramming();
       });
     } else if (this.state.registrationState === "complete" || this.state.registrationState === "err") {
       // Let's start from prog again.
       this.setState({
-        instructionText: "Whilst holding down the prog0 button, press and release the RESET button.",
+        instructionText: text_name,
         buttonText: "Next",
-        registrationState: "prog"
+        registrationState: "name",
+        instructionImage: image_name
       });
     }
   }
@@ -60,10 +88,11 @@ class Configure extends Component {
       .then(res => {
         console.log(res);
         this.setState({
-          instructionText: "Please press RESET button once.",
+          instructionText: text_configuring,
           registrationState: "configuring",
           buttonText: "Next",
-          isButtonDisabled: true
+          isButtonDisabled: true,
+          instructionImage: image_reset
         }, () => {
           this.beginConfiguring();
         });
@@ -95,7 +124,8 @@ class Configure extends Component {
                 instructionText: "Success! Feeder registered successfuly.",
                 registrationState: "complete",
                 isButtonDisabled: false,
-                buttonText: "Register Another Feeder"
+                buttonText: "Register Another Feeder",
+                instructionImage: image_complete
               });
             })
             .catch((__err) => {
@@ -117,7 +147,8 @@ class Configure extends Component {
       instructionText: err,
       registrationState: "err",
       isButtonDisabled: false,
-      buttonText: "Retry"
+      buttonText: "Retry",
+      instructionImage: image_error
     });
   }
 
@@ -128,7 +159,7 @@ class Configure extends Component {
   }
 
   renderFormInput() {
-    if (this.state.registrationState === "idle") {
+    if (this.state.registrationState === "name") {
       return(
         <FormGroup controlId="feederNameForm">
           <ControlLabel>Feeder name</ControlLabel>
@@ -150,15 +181,22 @@ class Configure extends Component {
     return (
       <>
         <br/>
-        {this.renderFormInput()}
-        <p>{this.state.instructionText}</p>
-        <Button
-          variant="primary"
-          onClick={this.handleButtonClick}
-          disabled={this.state.isButtonDisabled}
-        >
-          {this.state.buttonText}
-        </Button>
+        <Row>
+          <Col md={6}>
+            <img src={this.state.instructionImage} width="100%"/>
+          </Col>
+          <Col md={6}>
+            {this.renderFormInput()}
+            <p>{this.state.instructionText}</p>
+            <Button
+              variant="primary"
+              onClick={this.handleButtonClick}
+              disabled={this.state.isButtonDisabled}
+            >
+              {this.state.buttonText}
+            </Button>
+          </Col>
+        </Row>
       </>
     );
   }
