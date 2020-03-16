@@ -14,8 +14,7 @@ const text_idle = "To register a feeder, make sure your feeder is plugged in as 
 const text_name = "Please type a name for your feeder. Make sure it's a unique name. You can change it later.";
 const text_prog = "Whilst holding down the GPIO0 button, press and release the RESET button. Then release the GPIO0 button. The red light on the circuit board should remain on.";
 const text_programming = "Programming board... Please do not unplug the feeder.";
-const text_reset = "Press and release the RESET button.";
-const text_configuring = "Configuring board...";
+const text_configuring = "Press and release the RESET button.";
 const text_registering = "Registering board...";
 
 class Configure extends Component {
@@ -109,13 +108,18 @@ class Configure extends Component {
     axios.post('/api/configure')
       .then(_res => {
         console.log(_res);
-        this.setState({ instructionText: "Registering feeder..."}, () => {
+        this.setState({
+          instructionText: text_registering,
+          registrationState: "registering",
+          instructionImage: image_registering
+        }, () => {
           // Register
           let postData;
           if (this.state.feederName !== "") {
             postData = {
               feederName: this.state.feederName
             };
+            console.log("Feeder name: " + this.state.feederName);
           }
           axios.post('/api/register', postData)
             .then(__res => {

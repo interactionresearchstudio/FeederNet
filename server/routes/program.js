@@ -8,7 +8,7 @@ const axios = require('axios');
 const SerialPort = require('serialport');
 const Ready = require('@serialport/parser-ready');
 const ReadLine = require('@serialport/parser-readline');
-const port = new SerialPort('/dev/ttyUSB0', {autoOpen: false, baudRate: 115200});
+const port = new SerialPort(process.env.SERIAL_PORT, {autoOpen: false, baudRate: 115200});
 const Feeder = require('../models/feeder');
 
 // API routes
@@ -44,7 +44,7 @@ function sendBinary(req, res, next) {
     res.locals.binaryPath = path;
     var stream = request.get(downloadUrl).pipe(fs.createWriteStream(path));
     stream.on('finish', () => {
-      program(path, '/dev/ttyUSB0', (err) => {
+      program(path, process.env.SERIAL_PORT, (err) => {
         if (err) {
           console.log("ERROR: esptool error.");
           console.log(err);
@@ -59,7 +59,7 @@ function sendBinary(req, res, next) {
 
 // Send local binary file to esptool.
 function sendBinaryFromFile(req, res) {
-  program(__dirname + '/RFIDBirdFeeder.ino.bin', '/dev/ttyUSB0', (err) => {
+  program(__dirname + '/RFIDBirdFeeder.ino.bin', process.env.SERIAL_PORT, (err) => {
     if (err) {
       console.log("ERROR: esptool error.");
       console.log(err);
@@ -142,7 +142,6 @@ function getDeviceMacAddress(req, res, next) {
     console.log("INFO: Device registration - Waiting for MAC address from device...");
     const parser = port.pipe(new ReadLine({delimiter: '\r\n'}));
     parser.on('data', (data) => {
-      console.log("INFO: Data received from port: " + data);
       const macAddress = getMacFromString(data);
       if (macAddress != null) {
         console.log("INFO: Mac address " + macAddress[0] + " received.");
@@ -167,10 +166,9 @@ function addFeeder(req, res) {
   if (res.locals.isFeederRegistered === false) {
     console.log("INFO: Feeder is not registered.");
     let feederName = res.locals.macAddress;
-    if (req.body.name) {
-      feederName = req.body.name;
+    if (req.body.feederName) {
+      feederName = req.body.feederName;
     }
-    const feederName = req.body
     var newFeeder = new Feeder({
         stub: res.locals.macAddress,
         name: feederName,
