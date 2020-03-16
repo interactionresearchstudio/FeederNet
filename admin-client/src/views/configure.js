@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel, Button, Col, Row} from 'react-bootstrap';
 import axios from 'axios';
-import image_connections from '../images/Programming_Diagram_1500_1500_01.jpg';
-import image_prog from '../images/programming-mode.gif';
-import image_reset from '../images/Programming_Diagram_1500_1500_10.jpg';
-import image_name from '../images/Programming_Diagram_1500_1500_08.jpg';
-import image_programming from '../images/Programming_Diagram_1500_1500_13.jpg';
-import image_registering from '../images/Programming_Diagram_1500_1500_14.jpg';
-import image_complete from '../images/Programming_Diagram_1500_1500_15.jpg';
-import image_error from '../images/Programming_Diagram_1500_1500_16.jpg';
+import image_connections from '../images/Programming_Diagram_Visuals_1500_1000_01.jpg';
+import image_prog from '../images/programming-mode-1000h.gif';
+import image_reset from '../images/Programming_Diagram_Visuals_1500_1000_10.jpg';
+import image_name from '../images/Programming_Diagram_Visuals_1500_1000_12.jpg';
+import image_programming from '../images/Programming_Diagram_Visuals_1500_1000_13.jpg';
+import image_registering from '../images/Programming_Diagram_Visuals_1500_1000_14.jpg';
+import image_complete from '../images/Programming_Diagram_Visuals_1500_1000_15.jpg';
+import image_error from '../images/Programming_Diagram_Visuals_1500_1000_16.jpg';
 
 const text_idle = "To register a feeder, make sure your feeder is plugged in as pictured. When ready, click Start.";
 const text_name = "Please type a name for your feeder. Make sure it's a unique name. You can change it later.";
