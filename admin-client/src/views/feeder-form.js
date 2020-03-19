@@ -105,12 +105,12 @@ class FeederForm extends Component {
   renderButton() {
     if(this.state.updating) {
       return(
-        <Button type="submit" onClick={this.handleUpdate}>Update Feeder</Button>
+        <Button type="submit" onClick={this.handleUpdate}>Update Freader</Button>
       );
     }
     else {
       return(
-        <Button type="submit" onClick={this.handleSubmit}>Add New Feeder</Button>
+        <Button type="submit" onClick={this.handleSubmit}>Add New Freader</Button>
       );
     }
   }
@@ -122,22 +122,22 @@ class FeederForm extends Component {
         <Row>
           <Col sm={6}>
             <FormGroup controlId="feederName">
-              <ControlLabel>Feeder name</ControlLabel>
+              <ControlLabel>Freader name</ControlLabel>
               <FormControl
                 type="text"
                 value={this.state.feederName}
-                placeholder="Feeder 1"
+                placeholder="Freader 1"
                 onChange={this.handleNameChange}
                 />
             </FormGroup>
           </Col>
           <Col sm={6}>
             <FormGroup controlId="feederStub">
-              <ControlLabel>Feeder stub</ControlLabel>
+              <ControlLabel>Freader stub</ControlLabel>
               <FormControl
                 type="text"
                 value={this.state.feederStub}
-                placeholder="123456789"
+                placeholder="00:00:00:00:00"
                 onChange={this.handleStubChange}
               />
             </FormGroup>

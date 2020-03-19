@@ -19,7 +19,7 @@ class FeederTable extends Component {
           <td>{object.location.latitude}</td>
           <td>{object.location.longitude}</td>
           <td>{this.convertTime(object.lastPing)}</td>
-          <td>{object.lastReportedRssi}</td>
+          <td>{this.convertRssi(object.lastReportedRssi)}</td>
           <td>
             <Button
               onClick={() => this.props.deleteFeeder(object._id)}
@@ -58,13 +58,20 @@ class FeederTable extends Component {
     return time;
   }
 
+  convertRssi(rssi) {
+    if (rssi <= -90) return "Poor";
+    if (rssi <= -70) return "Fair";
+    if (rssi <= -60) return "Good";
+    if (rssi <= -50) return "Excellent";
+  }
+
   render() {
     return(
       <Table striped bordered condensed hover>
         <thead>
           <tr>
-            <th>Feeder Name</th>
-            <th>Feeder Stub</th>
+            <th>Freader Name</th>
+            <th>Freader Stub</th>
             <th>Latitude</th>
             <th>Longitude</th>
             <th>Last Ping</th>

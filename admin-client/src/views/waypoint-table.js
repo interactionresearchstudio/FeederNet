@@ -156,7 +156,7 @@ class WaypointTable extends Component {
             <tr>
               <th>Bird Name</th>
               <th>RFID</th>
-              <th>Feeder Name</th>
+              <th>Freader Name</th>
               <th>Date and Time</th>
               <th>Actions</th>
             </tr>

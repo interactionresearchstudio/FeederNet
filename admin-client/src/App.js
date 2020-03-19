@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <Router basename="/admin">
         <div id="App" className="container">
-          <h1>FeederNet Admin</h1>
+          <h1>Freader Hub</h1>
           <br/>
           <Route path="/" exact component={Index}/>
           <Route path="/login/" component={LoginForm}/>

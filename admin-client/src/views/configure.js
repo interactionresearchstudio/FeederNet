@@ -9,13 +9,34 @@ import image_programming from '../images/Programming_Diagram_Visuals_1500_1000_1
 import image_registering from '../images/Programming_Diagram_Visuals_1500_1000_14.jpg';
 import image_complete from '../images/Programming_Diagram_Visuals_1500_1000_15.jpg';
 import image_error from '../images/Programming_Diagram_Visuals_1500_1000_16.jpg';
+import progress_1 from '../images/BirdStatusBar_1.jpg';
+import progress_2 from '../images/BirdStatusBar_2.jpg';
+import progress_3 from '../images/BirdStatusBar_3.jpg';
+import progress_4 from '../images/BirdStatusBar_4.jpg';
+import progress_5 from '../images/BirdStatusBar_5.jpg';
+import progress_6 from '../images/BirdStatusBar_6.jpg';
+import progress_7 from '../images/BirdStatusBar_7.jpg';
+import progress_8 from '../images/BirdStatusBar_8.jpg';
+import progress_9 from '../images/BirdStatusBar_9.jpg';
 
-const text_idle = "To register a feeder, make sure your feeder is plugged in as pictured. When ready, click Start.";
-const text_name = "Please type a name for your feeder. Make sure it's a unique name. You can change it later.";
+const text_idle = "To register a freader, make sure your freader is plugged in as pictured. When ready, click Start.";
+const text_name = "Please type a name for your freader. Make sure it's a unique name. You can change it later.";
 const text_prog = "Whilst holding down the GPIO0 button, press and release the RESET button. Then release the GPIO0 button. The red light on the circuit board should remain on.";
-const text_programming = "Programming board... Please do not unplug the feeder.";
+const text_programming = "Programming board... Please do not unplug the freader.";
 const text_configuring = "Press and release the RESET button.";
 const text_registering = "Registering board...";
+
+const progress_images = [
+  progress_1,
+  progress_2,
+  progress_3,
+  progress_4,
+  progress_5,
+  progress_6,
+  progress_7,
+  progress_8,
+  progress_9
+];
 
 class Configure extends Component {
   constructor(props, context) {
@@ -26,16 +47,18 @@ class Configure extends Component {
     this.renderFormInput = this.renderFormInput.bind(this);
 
     // States:
-    // idle - waiting for user to start process
-    // name - waiting for user to give the freader a name
-    // prog - waiting for user to put feeder in programming mode
-    // programming - waiting for server to program device
-    // configuring - waiting for server to configure device
-    // registering - waiting for server to register device
-    // complete - process complete
+    // 0 idle - waiting for user to start process
+    // 1 name - waiting for user to give the freader a name
+    // 2 prog - waiting for user to put feeder in programming mode
+    // 3 programming - waiting for server to program device
+    // 4 configuring - waiting for server to configure device
+    // 6 registering - waiting for server to register device
+    // 7 complete - process complete
+    // 8 err - erorred out before finishing
 
     this.state = {
       registrationState: "idle",
+      registrationIndex: 0,
       instructionText: text_idle,
       instructionImage: image_connections,
       buttonText: "Start",
@@ -50,6 +73,7 @@ class Configure extends Component {
         instructionText: text_name,
         buttonText: "Next",
         registrationState: "name",
+        registrationIndex: 1,
         instructionImage: image_name
       });
     } else if (this.state.registrationState === "name") {
@@ -58,6 +82,7 @@ class Configure extends Component {
         instructionText: text_prog,
         buttonText: "Next",
         registrationState: "prog",
+        registrationIndex: 2,
         instructionImage: image_prog
       });
     } else if (this.state.registrationState === "prog") {
@@ -65,6 +90,7 @@ class Configure extends Component {
       this.setState({
         instructionText: text_programming,
         registrationState: "programming",
+        registrationIndex: 3,
         isButtonDisabled: true,
         instructionImage: image_programming
       }, () => {
@@ -76,6 +102,7 @@ class Configure extends Component {
         instructionText: text_name,
         buttonText: "Next",
         registrationState: "name",
+        registrationIndex: 1,
         instructionImage: image_name
       });
     }
@@ -89,6 +116,7 @@ class Configure extends Component {
         this.setState({
           instructionText: text_configuring,
           registrationState: "configuring",
+          registrationIndex: 4,
           buttonText: "Next",
           isButtonDisabled: true,
           instructionImage: image_reset
@@ -99,7 +127,7 @@ class Configure extends Component {
       .catch((err) => {
         console.log("ERROR: Programming failed.");
         console.log(err);
-        this.displayError("Error: Failed to configure device. Please check that the feeder is connected to the Raspberry Pi and try again.");
+        this.displayError("Error: Failed to configure device. Please check that the freader is connected to the Raspberry Pi and try again.");
       });
   }
 
@@ -111,6 +139,7 @@ class Configure extends Component {
         this.setState({
           instructionText: text_registering,
           registrationState: "registering",
+          registrationIndex: 6,
           instructionImage: image_registering
         }, () => {
           // Register
@@ -125,10 +154,11 @@ class Configure extends Component {
             .then(__res => {
               console.log(__res);
               this.setState({
-                instructionText: "Success! Feeder registered successfuly.",
+                instructionText: "Success! Freader registered successfuly.",
                 registrationState: "complete",
+                registrationIndex: 7,
                 isButtonDisabled: false,
-                buttonText: "Register Another Feeder",
+                buttonText: "Register Another Freader",
                 instructionImage: image_complete
               });
             })
@@ -150,6 +180,7 @@ class Configure extends Component {
     this.setState({
       instructionText: err,
       registrationState: "err",
+      registrationIndex: 8,
       isButtonDisabled: false,
       buttonText: "Retry",
       instructionImage: image_error
@@ -166,11 +197,11 @@ class Configure extends Component {
     if (this.state.registrationState === "name") {
       return(
         <FormGroup controlId="feederNameForm">
-          <ControlLabel>Feeder name</ControlLabel>
+          <ControlLabel>Freader name</ControlLabel>
           <FormControl
             type="text"
             value={this.state.feederName}
-            placeholder="Type new feeder name here"
+            placeholder="Type new freader name here"
             onChange={this.handleNameChange}
             />
         </FormGroup>
@@ -181,10 +212,21 @@ class Configure extends Component {
     }
   }
 
+  renderProgressBar() {
+    return(
+      <img src={progress_images[this.state.registrationIndex]} width="100%"/>
+    );
+  }
+
   render() {
     return (
       <>
         <br/>
+        <Row>
+          <Col md={12}>
+            {this.renderProgressBar()}
+          </Col>
+        </Row>
         <Row>
           <Col md={6}>
             <img src={this.state.instructionImage} width="100%"/>

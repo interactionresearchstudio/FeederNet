@@ -113,7 +113,7 @@ class EventTable extends Component {
           <thead>
             <tr>
               <th>Event Type</th>
-              <th>Feeder</th>
+              <th>Freader</th>
               <th>IP Address</th>
               <th>Date and Time</th>
               <th>Actions</th>

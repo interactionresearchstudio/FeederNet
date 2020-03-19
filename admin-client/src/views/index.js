@@ -66,7 +66,7 @@ class Index extends Component {
           <Tab eventKey={1} title="Birds">
             <Birds/>
           </Tab>
-          <Tab eventKey={2} title="Feeders">
+          <Tab eventKey={2} title="Freaders">
             <Feeders locationFilter={this.state.locationFilter}/>
           </Tab>
           <Tab eventKey={3} title="Events">
@@ -80,7 +80,7 @@ class Index extends Component {
               perPage={100}
             />
           </Tab>
-          <Tab eventKey={5} title="Register feeders">
+          <Tab eventKey={5} title="Register freaders">
             <Configure/>
           </Tab>
         </Tabs>
