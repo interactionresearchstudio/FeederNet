@@ -3,11 +3,11 @@ import { FormGroup, FormControl, ControlLabel, Button, Col, Row} from 'react-boo
 import axios from 'axios';
 import image_connections from '../images/Programming_Diagram_Visuals_1500_1000_01.jpg';
 import image_prog from '../images/programming-mode-1000h.gif';
-import image_reset from '../images/Programming_Diagram_Visuals_1500_1000_10.jpg';
+import image_reset from '../images/reset.gif';
 import image_name from '../images/Programming_Diagram_Visuals_1500_1000_12.jpg';
-import image_programming from '../images/Programming_Diagram_Visuals_1500_1000_13.jpg';
-import image_registering from '../images/Programming_Diagram_Visuals_1500_1000_14.jpg';
-import image_complete from '../images/Programming_Diagram_Visuals_1500_1000_15.jpg';
+import image_programming from '../images/programming_anim.gif';
+import image_registering from '../images/registering.gif';
+import image_complete from '../images/complete.gif';
 import image_error from '../images/Programming_Diagram_Visuals_1500_1000_16.jpg';
 import progress_1 from '../images/BirdStatusBar_1.jpg';
 import progress_2 from '../images/BirdStatusBar_2.jpg';
@@ -214,7 +214,7 @@ class Configure extends Component {
 
   renderProgressBar() {
     return(
-      <img src={progress_images[this.state.registrationIndex]} width="100%"/>
+      <img src={progress_images[this.state.registrationIndex]} alt="" width="100%"/>
     );
   }
 
@@ -229,7 +229,7 @@ class Configure extends Component {
         </Row>
         <Row>
           <Col md={6}>
-            <img src={this.state.instructionImage} width="100%"/>
+            <img src={this.state.instructionImage} width="100%" alt="" className="instruction-image"/>
           </Col>
           <Col md={6}>
             {this.renderFormInput()}

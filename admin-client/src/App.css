@@ -5,6 +5,14 @@
   width: 200px;
 }
 
+#App.container {
+  margin-bottom: 100px;
+}
+
+.instruction-image {
+  margin-bottom: 10px;
+}
+
 .btn-sm {
   margin-right: 10px;
 }

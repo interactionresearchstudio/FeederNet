@@ -16,6 +16,7 @@ WORKDIR /usr/src/app
 # Environment variables
 ENV MONGODB_URI mongodb://mongo:27017/feedernet
 ENV PORT 4000
+ENV SERIAL_PORT /dev/ttyUSB0
 
 # Install esptool
 RUN apt-get install python
