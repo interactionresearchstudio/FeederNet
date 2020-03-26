@@ -19,9 +19,9 @@ import progress_7 from '../images/BirdStatusBar_7.jpg';
 import progress_8 from '../images/BirdStatusBar_8.jpg';
 import progress_9 from '../images/BirdStatusBar_9.jpg';
 
-const text_idle = "To register a freader, make sure your freader is plugged in as pictured. When ready, click Start.";
+const text_idle = "To register a freader with the Freader Hub, make sure your freader is plugged in as pictured. When ready, click Start.";
 const text_name = "Please type a name for your freader. Make sure it's a unique name. You can change it later.";
-const text_prog = "Whilst holding down the GPIO0 button, press and release the RESET button. Then release the GPIO0 button. The red light on the circuit board should remain on.";
+const text_prog = "Whilst holding down the GPIO0 button, press and release the RESET button. Then release the GPIO0 button. The red light on the blue circuit board should turn on.";
 const text_programming = "Programming board... Please do not unplug the freader.";
 const text_configuring = "Press and release the RESET button.";
 const text_registering = "Registering board...";

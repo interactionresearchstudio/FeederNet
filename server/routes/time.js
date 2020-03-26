@@ -6,6 +6,7 @@ var Feeder = require('../models/feeder');
 // API routes
 router.get('/time', getTime);
 router.get('/time/sunrisesunset', getFeederLocation, getSunriseSunset);
+router.post('/time/set', setSystemTime);
 
 // Get time
 function getTime(req, res) {
@@ -53,6 +54,17 @@ function getSunriseSunset(req, res) {
         }
       });
     });
+}
+
+// Set system time
+function setSystemTime(req, res) {
+  if (req.body.time) {
+    // SET SYSTEM time
+    res.json({"SUCCESS": req.body.time});
+  }
+  else {
+    res.status(400).json({'ERROR': "Bad request. No time provided."});
+  }
 }
 
 function getFeederLocation(req, res, next) {
