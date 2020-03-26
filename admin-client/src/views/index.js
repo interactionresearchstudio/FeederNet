@@ -38,6 +38,17 @@ class Index extends Component {
     };
   }
 
+  componentDidMount() {
+    let currentTime = Date.now() / 1000;
+    let postData = {
+      time: currentTime
+    };
+    axios.post("/api/time/set", postData)
+      .then(res => {
+        console.log("INFO: Sent time to server.");
+      });
+  }
+
   handleSelect(key) {
     this.setState({key});
   }
