@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var axios = require('axios');
+var { getSunrise, getSunset } = require('sunrise-sunset-js');
 var Feeder = require('../models/feeder');
 
 // API routes
 router.get('/time', getTime);
 router.get('/time/sunrisesunset', getFeederLocation, getSunriseSunset);
+router.post('/time/set', setSystemTime);
 
 // Get time
 function getTime(req, res) {
@@ -20,39 +22,31 @@ function getTime(req, res) {
 
 // Get sunrise / sunset and send to feeder
 function getSunriseSunset(req, res) {
-  var locationRequest = 'lat=' + res.locals.feeder_location.latitude +
-    '&lng=' + res.locals.feeder_location.longitude +
-    '&date=today';
-  console.log("INFO: Request: " + 'https://api.sunrise-sunset.org/json?' + locationRequest);
-  axios.get('https://api.sunrise-sunset.org/json?' + locationRequest)
-    .then((response) => {
-      var sunrise = response.data.results.sunrise;
-      var sunset = response.data.results.sunset;
-      console.log('INFO: Sunrise: ' + sunrise + ' | Sunset: ' + sunset);
-      res.json({
-        'sunrise': {
-          'hour': parseInt(sunrise.substring(0, 1)),
-          'minute': parseInt(sunrise.substring(sunrise.indexOf(':') + 1, sunrise.indexOf(':') + 3))
-        },
-        'sunset': {
-          'hour': parseInt(sunset.substring(0, 1)) + 12,
-          'minute': parseInt(sunset.substring(sunrise.indexOf(':') + 1, sunrise.indexOf(':') + 3))
-        }
-      });
-    })
-    .catch((error) => {
-      console.log("WARNING: Requesting sunrise/sunset times failed. Error: " + error);
-      res.json({
-        'sunrise': {
-          'hour': 6,
-          'minute': 0
-        },
-        'sunset': {
-          'hour': 18,
-          'minute': 0
-        }
-      });
-    });
+  var sunrise = getSunrise(parseInt(res.locals.feeder_location.latitude), parseInt(res.locals.feeder_location.longitude));
+  var sunset = getSunset(parseInt(res.locals.feeder_location.latitude), parseInt(res.locals.feeder_location.longitude));
+  console.log('INFO: Sunrise: ' + sunrise + ' | Sunset: ' + sunset);
+
+  res.json({
+    'sunrise': {
+      'hour': sunrise.getHours(),
+      'minute': sunrise.getMinutes()
+    },
+    'sunset': {
+      'hour': sunset.getHours(),
+      'minute': sunset.getMinutes()
+    }
+  });
+}
+
+// Set system time
+function setSystemTime(req, res) {
+  if (req.body.time) {
+    // SET SYSTEM time
+    res.json({"SUCCESS": req.body.time});
+  }
+  else {
+    res.status(400).json({'ERROR': "Bad request. No time provided."});
+  }
 }
 
 function getFeederLocation(req, res, next) {
