@@ -31,7 +31,6 @@ RUN npm install -g yarn
 COPY package*.json ./
 COPY yarn.lock ./
 RUN yarn install
-RUN yarn add i2c-bus 
 
 # Bundle app source
 COPY . .
