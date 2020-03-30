@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel, Button, Col, Row} from 'react-bootstrap';
 import axios from 'axios';
-import image_connections from '../images/Programming_Diagram_Visuals_1500_1000_01.jpg';
+import image_connections from '../images/Programming_Diagram_1500_1000_01.jpg';
 import image_prog from '../images/programming-mode-1000h.gif';
 import image_reset from '../images/reset.gif';
 import image_name from '../images/Programming_Diagram_Visuals_1500_1000_12.jpg';
