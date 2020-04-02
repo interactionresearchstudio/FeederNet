@@ -30,6 +30,7 @@ RUN pip install esptool
 RUN npm install -g yarn
 COPY package*.json ./
 COPY yarn.lock ./
+RUN yarn config set strict-ssl false
 RUN yarn install
 
 # Bundle app source
