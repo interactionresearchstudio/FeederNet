@@ -12,7 +12,7 @@ services:
     privileged: true
     restart: on-failure
     environment:
-      - WIFI_NAME=feedernet
+      - WIFI_NAME=freaderhub
       - WIFI_PASS=badgersandfoxes
   mongo:
     container_name: mongo
