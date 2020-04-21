@@ -63,6 +63,7 @@ class FeederTable extends Component {
     if (rssi <= -70) return "Fair";
     if (rssi <= -60) return "Good";
     if (rssi <= -50) return "Excellent";
+    else return "Excellent";
   }
 
   render() {
