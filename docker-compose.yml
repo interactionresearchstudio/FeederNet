@@ -9,6 +9,7 @@ services:
       - mongo
     ports:
       - "80:4000"
+      - "4000:5000"
     privileged: true
     restart: on-failure
     environment:
