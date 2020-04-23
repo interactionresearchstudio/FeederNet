@@ -39,9 +39,8 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    let currentTime = Date.now() / 1000;
     let postData = {
-      time: currentTime
+      time: Date().toLocaleString()
     };
     axios.post("/api/time/set", postData)
       .then(res => {

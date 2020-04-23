@@ -1,0 +1,13 @@
+[Unit]
+Description=FeederNet Host Timeserver
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/home/pi/FeederNet/helpers/./timeserver.py
+WorkingDirectory=/home/pi/FeederNet/helpers
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target

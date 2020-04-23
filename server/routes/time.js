@@ -3,11 +3,12 @@ var router = express.Router();
 var axios = require('axios');
 var { getSunrise, getSunset } = require('sunrise-sunset-js');
 var Feeder = require('../models/feeder');
+var auth = require('./auth');
 
 // API routes
 router.get('/time', getTime);
 router.get('/time/sunrisesunset', getFeederLocation, getSunriseSunset);
-router.post('/time/set', setSystemTime);
+router.post('/time/set', auth.isLoggedIn, setSystemTime);
 
 // Get time
 function getTime(req, res) {
@@ -41,8 +42,18 @@ function getSunriseSunset(req, res) {
 // Set system time
 function setSystemTime(req, res) {
   if (req.body.time) {
-    // SET SYSTEM time
-    res.json({"SUCCESS": req.body.time});
+    console.log('INFO: System time requested with time string ' + req.body.time);
+    axios.post('localhost:4000', {time: req.body.time})
+      .then((_res) => {
+        console.log('INFO: System time changed by user client.');
+        res.json({"SUCCESS": req.body.time});
+      })
+      .catch((err) => {
+        console.log('ERROR: Request to time server failed.');
+        console.log(err);
+        res.status(500).json({'ERROR': "Internal request to time server failed."});
+
+      });
   }
   else {
     res.status(400).json({'ERROR': "Bad request. No time provided."});
