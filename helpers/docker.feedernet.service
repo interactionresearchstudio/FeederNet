@@ -1,6 +1,6 @@
 [Unit]
 Description=FeederNet Containers
-After=timeserver.service
+After=timeserver.feedernet.service
 Requires=docker.service
 
 [Service]

@@ -43,7 +43,7 @@ function getSunriseSunset(req, res) {
 function setSystemTime(req, res) {
   if (req.body.time) {
     console.log('INFO: System time requested with time string ' + req.body.time);
-    axios.post('localhost:5000', {time: req.body.time})
+    axios.post('172.19.0.1:5000', {time: req.body.time})
       .then((_res) => {
         console.log('INFO: System time changed by user client.');
         res.json({"SUCCESS": req.body.time});
