@@ -27,9 +27,8 @@ class S(BaseHTTPRequestHandler):
             self._set_response(200)
             self.wfile.write('SUCCESS'.encode('utf-8'))
             is_time_set = True
-            os.system('date -s "' + data["time"] + '"')
-            os.system('hwclock -w')
-            logging.info('Time updated.')
+            logging.info('Updating time...')
+            os.system('date -s "' + data["time"] + '" && hwclock -w')
 
 def run(server_class=HTTPServer, handler_class=S, port=4000):
     logging.basicConfig(level=logging.INFO)
