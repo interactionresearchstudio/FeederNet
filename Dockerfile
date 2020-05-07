@@ -15,7 +15,7 @@ WORKDIR /usr/src/app
 
 # Environment variables
 ENV MONGODB_URI mongodb://mongo:27017/feedernet
-ENV PORT 80
+ENV PORT 4000
 ENV SERIAL_PORT /dev/ttyUSB0
 
 # Install esptool
@@ -37,6 +37,6 @@ RUN yarn install
 COPY . .
 COPY --from=build /admin-client/build /usr/src/app/admin-client/build
 
-EXPOSE 80
+EXPOSE 4000
 
 CMD [ "npm", "start" ]
