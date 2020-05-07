@@ -1,0 +1,17 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "uploadOnSave": false,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "raspberrypi.local",
+  "target": "/home/pi/FeederNet",
+  "ignore": [
+    "node-modules"
+  ],
+  "username": "pi",
+  "password": "raspberry",
+  "watch": [],
+  "transport": "scp"
+}

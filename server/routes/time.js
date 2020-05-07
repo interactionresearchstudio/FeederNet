@@ -44,7 +44,7 @@ function getSunriseSunset(req, res) {
 function setSystemTime(req, res) {
   if (req.body.time) {
     console.log('INFO: System time requested with time string ' + req.body.time);
-    exec('date -s "' + req.body.time + '" && hwclock -w', (err, stdout, stderr) => {
+    exec('date -s "' + req.body.time + '" && hwclock -D -w', (err, stdout, stderr) => {
       console.log(`stdout: ${stdout}`);
       console.log(`stderr: ${stderr}`);
       if (err) {
