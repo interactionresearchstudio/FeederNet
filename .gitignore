@@ -75,3 +75,5 @@ awscredentials.json
 
 # ENV files
 env.list
+
+.remote-sync.json
