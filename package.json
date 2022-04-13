@@ -28,7 +28,7 @@
     "tmp": "^0.1.0"
   },
   "devDependencies": {
-    "async": "^3.1.0",
+    "async": "^3.2.2",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "concurrently": "^4.0.1",
